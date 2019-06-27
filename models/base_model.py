@@ -8,11 +8,19 @@ from datetime import datetime
 class BaseModel:
     """Base model class"""
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         """Initialization method for instance"""
-        self.id = str(uuid4())
-        self.created_at = datetime.utcnow()
-        self.updated_at = datetime.utcnow()
+        if not kwargs:
+            self.id = str(uuid4())
+            self.created_at = datetime.utcnow()
+            self.updated_at = datetime.utcnow()
+        else:
+            for key,val in kwargs.items():
+                if key == "updated_at" or key == "created_at":
+                    date = datetime.strptime(val, '%Y-%m-%dT%H:%M:%S.%f')
+                    setattr(self, key, date)
+                elif key[0] is not '_':
+                    setattr(self, key, val)
 
     def __str__(self):
         """Str method for Base class"""
