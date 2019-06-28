@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 """"Console v 0.0.1"""
 import cmd
+from models.base_model import BaseModel
+import models
 
 
 class HBNBCommand(cmd.Cmd):
@@ -24,45 +26,91 @@ class HBNBCommand(cmd.Cmd):
         """This method adds EOF handling"""
         return True
 
-    def do_create(self, cls_name=None):
+    def do_create(self, line):
         """Cretaes an instance of @cls_name class"""
-        if not cls_name:
+        names = ["BaseModel"]
+        args = line.split(" ")
+        if not line:
             print("** class name missing **")
+        elif args[0] not in names:
+            print("** class doesn't exist **")
         else:
-            print("create cmd")
+            obj = BaseModel() # use eval or if statements to create objs for other classes
+            obj.save()
+            print(obj.id)
 
-    def do_show(self, cls_name=None, id=None):
+    def do_show(self, line):
         """Shows an instance of @cls_name class"""
-        if not cls_name:
+        names = ["BaseModel"]
+        args = line.split(" ")
+        l = len(args)
+        if not line:
             print("** class name missing **")
+        elif args[0] not in names:
+            print("** class doesn't exist **")
+        elif l == 1:
+            print("** instance id missing **")
         else:
-            print("show cmd")
+            d = models.storage.objects
+            key = args[0] + '.' + args[1]
+            if key in d:
+                print(d[key])
+            else:
+                print("** no instance found **")
 
-    def do_destroy(self, cls_name=None, id=None):
+    def do_destroy(self, line):
         """Deletes an instance of class @cls_name"""
-        if not cls_name:
+        names = ["BaseModel"]
+        args = line.split(" ")
+        if not line:
             print("** class name missing **")
+        elif args[0] not in names:
+            print("** class doesn't exist **")
         else:
-            print("destroy cmd")
+            d = models.storage.objects
+            key = args[0] + '.' + args[1]
+            if key in d:
+                del d[key]
+                models.storage.save()
+            else:
+                print("** no instance found **")
 
-    def do_all(self, cls_name=None):
+    def do_all(self, line):
         """Shows all instances of @cls_name class"""
-        if not cls_name:
-            print("** class name missing **")
+        names = ["BaseModel"]
+        args = line.split(" ")
+        d = models.storage.objects
+        if not line:
+            print([str(x) for x in d.values()])
+        elif args[0] not in names:
+            print("** class doesn't exist **")
         else:
-            print("all cmd")
+            print([str(v) for k, v in d.items() if k.split('.')[0] == args[0]])
 
-    def do_update(self, cls_name=None, id=None, attr_name=None, attr_val=None):
+    def do_update(self, line):
         """Updates an instance based on the class name and id by adding or
         updating attribute (save the change into the JSON file)"""
-        if not cls_name:
+        names = ["BaseModel"]
+        args = line.split(" ")
+        l = len(args)
+        if not line:
             print("** class name missing **")
+        elif args[0] not in names:
+            print("** class doesn't exist **")
+        elif l == 1:
+            print("** instance id missing **")
+        elif l == 2:
+            print("** attribute name missing **")
+        elif l == 3:
+            print("* value missing **")
         else:
-            print("cretae show")
-
-    def postloop(self):
-        print(end="")
-
+            d = models.storage.objects
+            key = args[0] + '.' + args[1]
+            if key in d:
+                setattr(d[key], args[2], args[3])
+                models.storage.save()
+            else:
+                print("** no instance found **")
 
 if __name__ == '__main__':
     cli = HBNBCommand()

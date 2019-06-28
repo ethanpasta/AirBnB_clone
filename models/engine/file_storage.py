@@ -9,6 +9,11 @@ class FileStorage:
     __file_path = "file.json"
     __objects = {}
 
+    @property
+    def objects(self):
+        """Getter for __objects"""
+        return self.__objects
+
     def all(self):
         """Method returns __objects dictionary"""
         return self.__objects
