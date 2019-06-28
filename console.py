@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 """"Console v 0.0.1"""
 import cmd
-import sys
 
 
 class HBNBCommand(cmd.Cmd):
@@ -14,10 +13,12 @@ class HBNBCommand(cmd.Cmd):
 
     def emptyline(self):
         """Do nothing when empty line is entered"""
+        return False
 
     def do_quit(self, arg=0):
-        """Quit command to exit the program"""
-        sys.exit(arg)
+        """Quit command to exit the program
+        """
+        return True
 
     def do_EOF(self, line):
         """This method adds EOF handling"""

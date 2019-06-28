@@ -3,7 +3,7 @@
    This class is base class for all other class of AirBnB project"""
 from uuid import uuid4
 from datetime import datetime
-from models.__init__ import storage
+import models
 
 
 class BaseModel:
@@ -15,13 +15,13 @@ class BaseModel:
             self.id = str(uuid4())
             self.created_at = datetime.utcnow()
             self.updated_at = datetime.utcnow()
-            storage.new(self)
+            models.storage.new(self)
         else:
-            for key,val in kwargs.items():
-                if key == "updated_at" or key == "created_at":
+            for key, val in kwargs.items():
+                if key in ("updated_at", "created_at"):
                     date = datetime.strptime(val, '%Y-%m-%dT%H:%M:%S.%f')
                     setattr(self, key, date)
-                elif key[0] is not '_':
+                elif key[0] != '_':
                     setattr(self, key, val)
 
     def __str__(self):
@@ -33,7 +33,7 @@ class BaseModel:
         """Updates the public instance attribute
         updated_at with the current datetime"""
         self.updated_at = datetime.utcnow()
-        storage.save()
+        models.storage.save()
 
     def to_dict(self):
         """Method returns a dictionary containing all keys/values
