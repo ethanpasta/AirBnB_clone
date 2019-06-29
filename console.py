@@ -8,7 +8,7 @@ from models.city import City
 from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
-import models
+from models import storage
 
 
 class HBNBCommand(cmd.Cmd):
@@ -23,40 +23,54 @@ class HBNBCommand(cmd.Cmd):
         """Do nothing when empty line is entered"""
         return False
 
-    def do_quit(self, arg=0):
-        """Quit command to exit the program
+    def do_quit(self, line):
+        """
+        Quit command interpreter with 'quit'
         """
         return True
 
     def do_EOF(self, line):
-        """This method adds EOF handling"""
+        """
+        Quit command interpreter with ctrl+d
+        """
         return True
 
     def do_create(self, line):
-        """Creates an instance of @cls_name class"""
+        """
+        Creates a new instance of @cls_name class, and prints the new instance's ID.
+        Arguments to enter with command: <class name>
+        Example: 'create User'
+        """
         if not line:
             print("** class name missing **")
             return
         args = line.split(" ")
         try:
+            # args[0] contains class name, create new instance of that class
             obj = eval(args[0])()
+
+            # updates 'updated_at' attribute, and saves into JSON file
             obj.save()
+
             print(obj.id)
         except NameError:
             print("** class doesn't exist **")
 
     def do_show(self, line):
-        """Shows an instance of @cls_name class"""
+        """
+        Prints a string representation of an instance.
+        Arguments to enter with command: <class name> <id>
+        Example: 'show User 1234-1234-1234'
+        """
         if not line:
             print("** class name missing **")
             return
         args = line.split(" ")
-        l = len(args)
-        if l != 2:
+        if len(args) < 2:
             print("** instance id missing **")
         else:
             try:
-                d = models.storage.objects
+                d = storage.objects
                 key = args[0] + '.' + args[1]
                 if key in d:
                     print(d[key])
@@ -67,26 +81,36 @@ class HBNBCommand(cmd.Cmd):
 
 
     def do_destroy(self, line):
-        """Deletes an instance of class @cls_name"""
+        """
+        Deletes an instance of a certain class.
+        Arguments to enter with command: <class name> <id>
+        Example: 'destroy User 1234-1234-1234'
+        """
         if not line:
             print("** class name missing **")
             return
         args = line.split(" ")
+        if len(args) != 2:
+            print("** instance id missing **")
+            return
         try:
-            d = models.storage.objects
+            d = storage.objects
             key = args[0] + '.' + args[1]
             if key in d:
                 del d[key]
-                models.storage.save()
+                storage.save()
             else:
                 print("** no instance found **")
         except NameError:
             print("** class doesn't exist **")
 
-
     def do_all(self, line):
-        """Shows all instances of @cls_name class"""
-        d = models.storage.objects
+        """
+        Shows all instances, or instances of a certain class
+        Arguments to enter with command (optional): <class name>
+        Example: 'all' OR 'all User'
+        """
+        d = storage.objects
         if not line:
             print([str(x) for x in d.values()])
             return
@@ -99,8 +123,12 @@ class HBNBCommand(cmd.Cmd):
             print([str(v) for k, v in d.items() if k.split('.')[0] == args[0]])
 
     def do_update(self, line):
-        """Updates an instance based on the class name and id by adding or
-        updating attribute (save the change into the JSON file)"""
+        """
+        Updates an instance based on the class name and id by adding or
+        updating an attribute
+        Arguments to enter with command: <class name> <id> <attribute name> "<attribute value>"
+        Example: 'update User 1234-1234-1234 my_name "Bob"'
+        """
         if not line:
             print("** class name missing **")
             return
@@ -114,11 +142,11 @@ class HBNBCommand(cmd.Cmd):
             print("* value missing **")
         else:
             try:
-                d = models.storage.objects
+                d = storage.objects
                 key = args[0] + '.' + args[1]
                 if key in d:
                     setattr(d[key], args[2], args[3][1:-1])
-                    models.storage.save()
+                    storage.save()
                 else:
                     print("** no instance found **")
             except NameError:
