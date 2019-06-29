@@ -3,6 +3,11 @@
 import cmd
 from models.base_model import BaseModel
 from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 import models
 
 
@@ -85,7 +90,8 @@ class HBNBCommand(cmd.Cmd):
         if not line:
             print([str(x) for x in d.values()])
             return
-        names = ["BaseModel", "User"]
+        names = ["BaseModel", "User", "State", "City", "Amenity",
+                 "Place", "Review"]
         args = line.split(" ")
         if args[0] not in names:
             print("** class doesn't exist **")
@@ -111,7 +117,7 @@ class HBNBCommand(cmd.Cmd):
                 d = models.storage.objects
                 key = args[0] + '.' + args[1]
                 if key in d:
-                    setattr(d[key], args[2], args[3])
+                    setattr(d[key], args[2], args[3][1:-1])
                     models.storage.save()
                 else:
                     print("** no instance found **")
