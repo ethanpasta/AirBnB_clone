@@ -152,6 +152,38 @@ class HBNBCommand(cmd.Cmd):
             except NameError:
                 print("** class doesn't exist **")
 
+    def default(self, line):
+        """Method to take care of following commands:
+        <class name>.all()
+        <class name>.count()
+        <class name>.show(<id>)
+        <class name>.destroy(<id>)
+        <class name>.update(<id>, <attribute name>, <attribute value>)
+        <class name>.update(<id>, <dictionary representation)
+        """
+        names = ["BaseModel", "User", "State", "City", "Amenity",
+                 "Place", "Review"]
+        commands = {"all": do_all, "count": my_count, "show": do_show, "destroy": do_destroy, "update": do_update}
+        args = line.split(".")
+        if len(args) != 2 or args[0] not in names:
+            print("*** Unknown syntax: {}".format(line))
+            return
+        command = args[1]
+#        if command == "all()":
+#            self.do_all(args[0])
+#            return
+#        elif command == "count()":
+#            count = 0
+#            d = storage.all()
+#            for obj in d.values():
+#                if obj.__class__.__name__ == args[0]:
+#                    count += 1
+#            print(count)
+#            return
+#        else:
+#            print("*** Unknown syntax: {}".format(line))
+#            return
+
 if __name__ == '__main__':
     cli = HBNBCommand()
     cli.cmdloop()
