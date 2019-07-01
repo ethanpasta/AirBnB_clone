@@ -67,11 +67,14 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
             return
         args = line.split(" ")
+        print(args, type(args[0]))
         if len(args) < 2:
             print("** instance id missing **")
         else:
             try:
-                d = storage.objects
+                d = storage.all()
+                if args[1][0] == '"':
+                    args[1] = args[1].replace('"', "")
                 key = args[0] + '.' + args[1]
                 if key in d:
                     print(d[key])
@@ -94,7 +97,9 @@ class HBNBCommand(cmd.Cmd):
             print("** instance id missing **")
             return
         try:
-            d = storage.objects
+            d = storage.all()
+            if args[1][0] == '"':
+                args[1] = args[1].replace('"', "")
             key = args[0] + '.' + args[1]
             if key in d:
                 del d[key]
@@ -110,7 +115,7 @@ class HBNBCommand(cmd.Cmd):
         Arguments to enter with command (optional): <class name>
         Example: 'all' OR 'all User'
         """
-        d = storage.objects
+        d = storage.all()
         if not line:
             print([str(x) for x in d.values()])
             return
@@ -120,7 +125,8 @@ class HBNBCommand(cmd.Cmd):
         if args[0] not in names:
             print("** class doesn't exist **")
         else:
-            print([str(v) for k, v in d.items() if k.split('.')[0] == args[0]])
+            print([str(v) for v in d.values() if
+                   v.__class__.__name__ == args[0]])
 
     def do_update(self, line):
         """
@@ -142,10 +148,16 @@ class HBNBCommand(cmd.Cmd):
             print("* value missing **")
         else:
             try:
-                d = storage.objects
+                d = storage.all()
+                if args[1][0] == '"':
+                    args[1] = args[1].replace('"', "")
+                if args[2][0] == '"':
+                    args[2] = args[2].replace('"', "")
+                if args[3][0] == '"':
+                    args[3] = args[3].replace('"', "")
                 key = args[0] + '.' + args[1]
                 if key in d:
-                    setattr(d[key], args[2], args[3][1:-1])
+                    setattr(d[key], args[2], args[3])
                     storage.save()
                 else:
                     print("** no instance found **")
@@ -155,7 +167,7 @@ class HBNBCommand(cmd.Cmd):
     def my_count(self, class_n):
         """Method counts instances of a certain class"""
         c = 0
-        for o in storage.objects.values():
+        for o in storage.all().values():
             if o.__class__.__name__ == class_n:
                 c += 1
         print(c)
@@ -176,18 +188,20 @@ class HBNBCommand(cmd.Cmd):
                     "show": self.do_show,
                     "destroy": self.do_destroy,
                     "update": self.do_update}
-        args = re.split("[.(), ]\S", line)
+        args = re.match(r"^(\w+)\.(\w+)\((.*)\)", line)
+        args = args.groups()
         if len(args) < 2 or args[0] not in names or args[1] not in commands.keys():
             super().default(line)
             return
         if args[1] in ["all", "count"]:
             commands[args[1]](args[0])
         elif args[1] in ["show", "destroy"]:
-            commands[args[1]](args[0] + ' ' + args[2][1:-1])
+            commands[args[1]](args[0] + ' ' + args[2])
         elif args[1] == "update":
-            print(args)
-            commands[args[1]](args[0] + " " + args[2][1:-1] + " " +
-                              args[3] + " " + args[4])
+            rest = args[2].split(", ")
+            commands[args[1]](args[0] + " " + rest[0] + " " +
+                              rest[1] + " " + rest[2])
+
 if __name__ == '__main__':
     cli = HBNBCommand()
     cli.cmdloop()
