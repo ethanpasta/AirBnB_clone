@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """"Console v 0.0.1"""
 import cmd
+import re
 from models.base_model import BaseModel
 from models.user import User
 from models.state import State
@@ -79,7 +80,6 @@ class HBNBCommand(cmd.Cmd):
             except NameError:
                 print("** class doesn't exist **")
 
-
     def do_destroy(self, line):
         """
         Deletes an instance of a certain class.
@@ -152,6 +152,14 @@ class HBNBCommand(cmd.Cmd):
             except NameError:
                 print("** class doesn't exist **")
 
+    def my_count(self, class_n):
+        """Method counts instances of a certain class"""
+        c = 0
+        for o in storage.objects.values():
+            if o.__class__.__name__ == class_n:
+                c += 1
+        print(c)
+
     def default(self, line):
         """Method to take care of following commands:
         <class name>.all()
@@ -163,27 +171,23 @@ class HBNBCommand(cmd.Cmd):
         """
         names = ["BaseModel", "User", "State", "City", "Amenity",
                  "Place", "Review"]
-        commands = {"all": do_all, "count": my_count, "show": do_show, "destroy": do_destroy, "update": do_update}
-        args = line.split(".")
-        if len(args) != 2 or args[0] not in names:
-            print("*** Unknown syntax: {}".format(line))
+        commands = {"all": self.do_all,
+                    "count": self.my_count,
+                    "show": self.do_show,
+                    "destroy": self.do_destroy,
+                    "update": self.do_update}
+        args = re.split("[.(), ]\S", line)
+        if len(args) < 2 or args[0] not in names or args[1] not in commands.keys():
+            super().default(line)
             return
-        command = args[1]
-#        if command == "all()":
-#            self.do_all(args[0])
-#            return
-#        elif command == "count()":
-#            count = 0
-#            d = storage.all()
-#            for obj in d.values():
-#                if obj.__class__.__name__ == args[0]:
-#                    count += 1
-#            print(count)
-#            return
-#        else:
-#            print("*** Unknown syntax: {}".format(line))
-#            return
-
+        if args[1] in ["all", "count"]:
+            commands[args[1]](args[0])
+        elif args[1] in ["show", "destroy"]:
+            commands[args[1]](args[0] + ' ' + args[2][1:-1])
+        elif args[1] == "update":
+            print(args)
+            commands[args[1]](args[0] + " " + args[2][1:-1] + " " +
+                              args[3] + " " + args[4])
 if __name__ == '__main__':
     cli = HBNBCommand()
     cli.cmdloop()
