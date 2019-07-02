@@ -32,6 +32,13 @@ class TestFileStorage_5(unittest.TestCase):
         if (os.path.exists(file)):
             os.remove(file)
 
+    def test_private_attributes(self):
+        """Test private attributes"""
+        with self.assertRaises(AttributeError):
+            print(storage.objects)
+        with self.assertRaises(AttributeError):
+            print(storage.file_path)
+
     def test_simple_check(self):
         """Simple check"""
         file = storage._FileStorage__file_path
@@ -142,3 +149,8 @@ class TestFileStorage_5(unittest.TestCase):
         self.assertEqual(storage.all(), {})
         BaseModel()
         self.assertTrue(storage.all() != {})
+        #print(d)
+
+
+if __name__ == "__main__":
+    unittest.main()
