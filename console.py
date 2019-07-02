@@ -65,8 +65,7 @@ class HBNBCommand(cmd.Cmd):
         if not line:
             print("** class name missing **")
             return
-        args = line.split(" ")
-        print(args, type(args[0]))
+        args = line.split()
         if len(args) < 2:
             print("** instance id missing **")
         else:
@@ -91,7 +90,7 @@ class HBNBCommand(cmd.Cmd):
         if not line:
             print("** class name missing **")
             return
-        args = line.split(" ")
+        args = line.split()
         if len(args) != 2:
             print("** instance id missing **")
             return
@@ -120,7 +119,7 @@ class HBNBCommand(cmd.Cmd):
             return
         names = ["BaseModel", "User", "State", "City", "Amenity",
                  "Place", "Review"]
-        args = line.split(" ")
+        args = line.split()
         if args[0] not in names:
             print("** class doesn't exist **")
         else:
@@ -135,34 +134,39 @@ class HBNBCommand(cmd.Cmd):
         <class name> <id> <attribute name> "<attribute value>"
         Example: 'update User 1234-1234-1234 my_name "Bob"'
         """
+        errors = ["** no instance found **",
+                  "** instance id missing **",
+                  "** attribute name missing **",
+                  "** value missing **",
+                  "** class doesn't exist **"]
         if not line:
             print("** class name missing **")
             return
-        args = line.split(" ")
-        l = len(args)
-        if l == 1:
-            print("** instance id missing **")
-        elif l == 2:
-            print("** attribute name missing **")
-        elif l == 3:
-            print("* value missing **")
-        else:
-            try:
-                d = storage.all()
-                if args[1][0] == '"':
-                    args[1] = args[1].replace('"', "")
-                if args[2][0] == '"':
-                    args[2] = args[2].replace('"', "")
-                if args[3][0] == '"':
-                    args[3] = args[3].replace('"', "")
-                key = args[0] + '.' + args[1]
-                if key in d:
-                    setattr(d[key], args[2], args[3])
-                    storage.save()
-                else:
-                    print("** no instance found **")
-            except NameError:
-                print("** class doesn't exist **")
+        args = line.split()
+        if len(args) < 4:
+            print(errors[len(args)])
+            return
+        try:
+            d = storage.all()
+            for i in range(len(args[1:]) + 1):
+                if args[i][0] == '"':
+                    args[i] = args[i].replace('"', "")
+            key = args[0] + '.' + args[1]
+            if key in d:
+                attr_k = args[2]
+                attr_v = args[3]
+                class_attr = type(d[key]).__dict__
+                if attr_k in class_attr.keys():
+                    print("in")
+                    attr_v = type(class_attr[attr_k])(attr_v)
+                setattr(d[key], attr_k, attr_v)
+                print("key: {}, value: {}, type of value: {}".format(
+                    attr_k, attr_v, type(d[key].__dict__[attr_k])))
+                storage.save()
+            else:
+                print(errors[0])
+        except NameError:
+            print(errors[4])
 
     def my_count(self, class_n):
         """Method counts instances of a certain class"""
@@ -189,8 +193,9 @@ class HBNBCommand(cmd.Cmd):
                     "destroy": self.do_destroy,
                     "update": self.do_update}
         args = re.match(r"^(\w+)\.(\w+)\((.*)\)", line)
-        args = args.groups()
-        if len(args) < 2 or args[0] not in names \
+        if args:
+            args = args.groups()
+        if not args or len(args) < 2 or args[0] not in names \
            or args[1] not in commands.keys():
             super().default(line)
             return
