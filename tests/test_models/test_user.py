@@ -30,6 +30,10 @@ class TestUser_8(unittest.TestCase):
         self.assertTrue(hasattr(my_model, "id"))
         self.assertTrue(hasattr(my_model, "created_at"))
         self.assertTrue(hasattr(my_model, "updated_at"))
+        self.assertTrue(hasattr(my_model, "email"))
+        self.assertTrue(hasattr(my_model, "password"))
+        self.assertTrue(hasattr(my_model, "first_name"))
+        self.assertTrue(hasattr(my_model, "last_name"))
 
     def test_init_time(self):
         """
@@ -61,7 +65,7 @@ class TestUser_8(unittest.TestCase):
 
     def test_save_method(self):
         """
-        Tests save() method of BaseClass
+        Tests save() method of User class
         """
         then = datetime.utcnow()
         my_model = User()
@@ -96,7 +100,7 @@ class TestUser_8(unittest.TestCase):
                             for k, v in d.items() if k in types[1:]))
 
 
-class TestUser_4(unittest.TestCase):
+class TestUser_kwargs(unittest.TestCase):
 
     """
     Test @kwargs argument for User constructor
