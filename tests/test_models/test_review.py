@@ -6,6 +6,7 @@ import unittest
 import uuid
 from datetime import datetime
 from models.review import Review
+from models.base_model import BaseModel
 
 
 class TestReview(unittest.TestCase):
@@ -16,6 +17,7 @@ class TestReview(unittest.TestCase):
         """
         Basic tests for Review class
         """
+        self.assertTrue(issubclass(Review, BaseModel))
         my_model = Review()
         my_model.name = "Holberton"
         my_model.my_number = 89

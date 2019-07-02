@@ -6,6 +6,7 @@ import unittest
 import uuid
 from datetime import datetime
 from models.amenity import Amenity
+from models.base_model import BaseModel
 
 
 class TestAmenity_8(unittest.TestCase):
@@ -16,6 +17,7 @@ class TestAmenity_8(unittest.TestCase):
         """
         Basic tests for Amenity class
         """
+        self.assertTrue(issubclass(Amenity, BaseModel))
         my_model = Amenity()
         my_model.name = "Holberton"
         my_model.my_number = 89

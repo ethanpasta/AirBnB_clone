@@ -6,6 +6,7 @@ import unittest
 import uuid
 from datetime import datetime
 from models.state import State
+from models.base_model import BaseModel
 
 
 class TestState(unittest.TestCase):
@@ -16,6 +17,7 @@ class TestState(unittest.TestCase):
         """
         Basic tests for State class
         """
+        self.assertTrue(issubclass(State, BaseModel))
         my_model = State()
         my_model.name = "Holberton"
         my_model.my_number = 89

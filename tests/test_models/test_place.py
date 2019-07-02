@@ -6,6 +6,7 @@ import unittest
 import uuid
 from datetime import datetime
 from models.place import Place
+from models.base_model import BaseModel
 
 
 class TestPlace(unittest.TestCase):
@@ -16,6 +17,7 @@ class TestPlace(unittest.TestCase):
         """
         Basic tests for Place class
         """
+        self.assertTrue(issubclass(Place, BaseModel))
         my_model = Place()
         my_model.name = "Holberton"
         my_model.my_number = 89
