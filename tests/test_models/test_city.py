@@ -5,18 +5,18 @@ import json
 import unittest
 import uuid
 from datetime import datetime
-from models.base_model import BaseModel
+from models.city import City
 
 
-class TestBaseModel_3(unittest.TestCase):
+class TestCity(unittest.TestCase):
 
-    """Unit test for BaseModel"""
+    """Unit test for City"""
 
     def test_basic_test(self):
         """
-        Basic tests for BaseModel class
+        Basic tests for City class
         """
-        my_model = BaseModel()
+        my_model = City()
         my_model.name = "Holberton"
         my_model.my_number = 89
         self.assertEqual([my_model.name, my_model.my_number],
@@ -26,17 +26,19 @@ class TestBaseModel_3(unittest.TestCase):
         """
         Test if created_at, updated_at and id are exist
         """
-        my_model = BaseModel()
+        my_model = City()
         self.assertTrue(hasattr(my_model, "id"))
         self.assertTrue(hasattr(my_model, "created_at"))
         self.assertTrue(hasattr(my_model, "updated_at"))
+        self.assertTrue(hasattr(my_model, "state_id"))
+        self.assertTrue(hasattr(my_model, "name"))
 
     def test_init_time(self):
         """
         Test if created_at, updated_at are valid
         """
         then = datetime.utcnow()
-        my_model = BaseModel()
+        my_model = City()
         now = datetime.utcnow()
         self.assertTrue(then < my_model.created_at < now)
         self.assertTrue(then < my_model.updated_at < now)
@@ -46,17 +48,17 @@ class TestBaseModel_3(unittest.TestCase):
         """
         Test if uuid is valid
         """
-        my_model = BaseModel()
-        my_model_1 = BaseModel()
+        my_model = City()
+        my_model_1 = City()
         self.assertEqual(uuid.UUID(my_model.id).version, 4)
         self.assertFalse(my_model.id == my_model_1.id)
 
     def test_str_method(self):
         """
-        Tests __str__ of BaseModel class
+        Tests __str__ of City class
         """
-        my_model = BaseModel()
-        s = "[BaseModel] ({}) {}".format(my_model.id, my_model.__dict__)
+        my_model = City()
+        s = "[City] ({}) {}".format(my_model.id, my_model.__dict__)
         self.assertEqual(str(my_model), s)
 
     def test_save_method(self):
@@ -64,7 +66,7 @@ class TestBaseModel_3(unittest.TestCase):
         Tests save() method of BaseClass
         """
         then = datetime.utcnow()
-        my_model = BaseModel()
+        my_model = City()
         updated_at = my_model.updated_at
         my_model.save()
         now = datetime.utcnow()
@@ -72,12 +74,12 @@ class TestBaseModel_3(unittest.TestCase):
 
     def test_to_dict_method(self):
         """
-        Tests to_dict() of BaseModel class and check types inside
+        Tests to_dict() of City class and check types inside
         """
-        my_model = BaseModel()
+        my_model = City()
         my_model.my_number = 777
         d = dict(my_model.__dict__)
-        d['__class__'] = "BaseModel"
+        d['__class__'] = "City"
         d['created_at'] = d['created_at'].isoformat()
         d['updated_at'] = d['updated_at'].isoformat()
         self.assertEqual(d, my_model.to_dict())
@@ -96,21 +98,21 @@ class TestBaseModel_3(unittest.TestCase):
                             for k, v in d.items() if k in types[1:]))
 
 
-class TestBaseModel_4(unittest.TestCase):
+class TestCity_4(unittest.TestCase):
 
     """
-    Test @kwargs argument for BaseModel constructor
+    Test @kwargs argument for City constructor
     """
 
     def test_dict(self):
         """
         Basic test of init method
         """
-        my_model = BaseModel()
+        my_model = City()
         my_model.name = "Holberton"
         my_model.my_number = 89
         my_model_json = my_model.to_dict()
-        my_new_model = BaseModel(**my_model_json)
+        my_new_model = City(**my_model_json)
         self.assertTrue(isinstance(my_new_model.created_at, datetime))
         self.assertTrue(isinstance(my_new_model.updated_at, datetime))
         self.assertFalse(my_model is my_new_model)
@@ -120,11 +122,11 @@ class TestBaseModel_4(unittest.TestCase):
     #     """
     #     Test the type of updated_at and created_at
     #     """
-    #     my_model = BaseModel()
+    #     my_model = City()
     #     my_model.name = "Holberton"
     #     my_model.my_number = 89
     #     my_model_json = my_model.to_dict()
-    #     my_new_model = BaseModel(**my_model_json)
+    #     my_new_model = City(**my_model_json)
     #     self.assertTrue(type(my_new_model.created_at) == datetime)
     #     self.assertFalse(my_model is my_new_model)
     #     self.assertEqual(my_new_model.to_dict(), my_model_json)

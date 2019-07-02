@@ -19,7 +19,7 @@ class TestConsole_6(unittest.TestCase):
         """Redirects stdin and stdout to mock module"""
         return HBNBCommand(stdin=self.mock_stdin, stdout=self.mock_stdout)
 
-    def _last_write(self, nr=None):
+    def last_write(self, nr=None):
         """Returns last `n` output lines"""
         if nr is None:
             return self.mock_stdout.write.call_args[0][0]
@@ -35,5 +35,6 @@ class TestConsole_6(unittest.TestCase):
         """Test help command"""
         cli = self.create()
         self.assertFalse(cli.onecmd("help"))
+        dir(self.mock_stdout.flush)
         #self.assertTrue(self.mock_stdout.flush.called)
-        #print(self._last_write())
+        print(self.last_write(5))
