@@ -40,8 +40,8 @@ class TestCity(unittest.TestCase):
         then = datetime.utcnow()
         my_model = City()
         now = datetime.utcnow()
-        self.assertTrue(then < my_model.created_at < now)
-        self.assertTrue(then < my_model.updated_at < now)
+        self.assertTrue(then <= my_model.created_at <= now)
+        self.assertTrue(then <= my_model.updated_at <= now)
         self.assertTrue(my_model.created_at <= my_model.updated_at)
 
     def test_init_id(self):
@@ -70,7 +70,7 @@ class TestCity(unittest.TestCase):
         updated_at = my_model.updated_at
         my_model.save()
         now = datetime.utcnow()
-        self.assertTrue(then < updated_at < my_model.updated_at < now)
+        self.assertTrue(then <= updated_at <= my_model.updated_at)
 
     def test_to_dict_method(self):
         """
@@ -86,9 +86,11 @@ class TestCity(unittest.TestCase):
 
         types = [str,
                  "updated_at",
-                 "cretaed_at",
+                 "created_at",
                  "__class__",
-                 "id"]
+                 "id",
+                 "name",
+                 "state_id"]
         self.assertTrue(all(isinstance(v, types[0])
                             for k, v in d.items() if k in types[1:]))
 

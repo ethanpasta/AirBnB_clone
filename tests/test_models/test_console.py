@@ -36,5 +36,5 @@ class TestConsole_6(unittest.TestCase):
         cli = self.create()
         self.assertFalse(cli.onecmd("help"))
         dir(self.mock_stdout.flush)
-        #self.assertTrue(self.mock_stdout.flush.called)
-        print(self.last_write(5))
+        # self.assertTrue(self.mock_stdout.flush.called)
+        # print(self.last_write(5))

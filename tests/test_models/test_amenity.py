@@ -5,18 +5,18 @@ import json
 import unittest
 import uuid
 from datetime import datetime
-from models.user import User
+from models.amenity import Amenity
 
 
-class TestUser_8(unittest.TestCase):
+class TestAmenity_8(unittest.TestCase):
 
-    """Unit test for User"""
+    """Unit test for Amenity"""
 
     def test_basic_test(self):
         """
-        Basic tests for User class
+        Basic tests for Amenity class
         """
-        my_model = User()
+        my_model = Amenity()
         my_model.name = "Holberton"
         my_model.my_number = 89
         self.assertEqual([my_model.name, my_model.my_number],
@@ -26,21 +26,18 @@ class TestUser_8(unittest.TestCase):
         """
         Test if created_at, updated_at and id are exist
         """
-        my_model = User()
+        my_model = Amenity()
         self.assertTrue(hasattr(my_model, "id"))
         self.assertTrue(hasattr(my_model, "created_at"))
         self.assertTrue(hasattr(my_model, "updated_at"))
-        self.assertTrue(hasattr(my_model, "email"))
-        self.assertTrue(hasattr(my_model, "password"))
-        self.assertTrue(hasattr(my_model, "first_name"))
-        self.assertTrue(hasattr(my_model, "last_name"))
+        self.assertTrue(hasattr(my_model, "name"))
 
     def test_init_time(self):
         """
         Test if created_at, updated_at are valid
         """
         then = datetime.utcnow()
-        my_model = User()
+        my_model = Amenity()
         now = datetime.utcnow()
         self.assertTrue(then <= my_model.created_at <= now)
         self.assertTrue(then <= my_model.updated_at <= now)
@@ -50,25 +47,25 @@ class TestUser_8(unittest.TestCase):
         """
         Test if uuid is valid
         """
-        my_model = User()
-        my_model_1 = User()
+        my_model = Amenity()
+        my_model_1 = Amenity()
         self.assertEqual(uuid.UUID(my_model.id).version, 4)
         self.assertFalse(my_model.id == my_model_1.id)
 
     def test_str_method(self):
         """
-        Tests __str__ of User class
+        Tests __str__ of Amenity class
         """
-        my_model = User()
-        s = "[User] ({}) {}".format(my_model.id, my_model.__dict__)
+        my_model = Amenity()
+        s = "[Amenity] ({}) {}".format(my_model.id, my_model.__dict__)
         self.assertEqual(str(my_model), s)
 
     def test_save_method(self):
         """
-        Tests save() method of User class
+        Tests save() method of Amenity class
         """
         then = datetime.utcnow()
-        my_model = User()
+        my_model = Amenity()
         updated_at = my_model.updated_at
         my_model.save()
         now = datetime.utcnow()
@@ -76,12 +73,12 @@ class TestUser_8(unittest.TestCase):
 
     def test_to_dict_method(self):
         """
-        Tests to_dict() of User class and check types inside
+        Tests to_dict() of Amenity class and check types inside
         """
-        my_model = User()
+        my_model = Amenity()
         my_model.my_number = 777
         d = dict(my_model.__dict__)
-        d['__class__'] = "User"
+        d['__class__'] = "Amenity"
         d['created_at'] = d['created_at'].isoformat()
         d['updated_at'] = d['updated_at'].isoformat()
         self.assertEqual(d, my_model.to_dict())
@@ -100,21 +97,21 @@ class TestUser_8(unittest.TestCase):
                             for k, v in d.items() if k in types[1:]))
 
 
-class TestUser_kwargs(unittest.TestCase):
+class TestAmenity_kwargs(unittest.TestCase):
 
     """
-    Test @kwargs argument for User constructor
+    Test @kwargs argument for Amenity constructor
     """
 
     def test_dict(self):
         """
         Basic test of init method
         """
-        my_model = User()
+        my_model = Amenity()
         my_model.name = "Holberton"
         my_model.my_number = 89
         my_model_json = my_model.to_dict()
-        my_new_model = User(**my_model_json)
+        my_new_model = Amenity(**my_model_json)
         self.assertTrue(isinstance(my_new_model.created_at, datetime))
         self.assertTrue(isinstance(my_new_model.updated_at, datetime))
         self.assertFalse(my_model is my_new_model)
@@ -124,11 +121,11 @@ class TestUser_kwargs(unittest.TestCase):
     #     """
     #     Test the type of updated_at and created_at
     #     """
-    #     my_model = User()
+    #     my_model = Amenity()
     #     my_model.name = "Holberton"
     #     my_model.my_number = 89
     #     my_model_json = my_model.to_dict()
-    #     my_new_model = User(**my_model_json)
+    #     my_new_model = Amenity(**my_model_json)
     #     self.assertTrue(type(my_new_model.created_at) == datetime)
     #     self.assertFalse(my_model is my_new_model)
     #     self.assertEqual(my_new_model.to_dict(), my_model_json)

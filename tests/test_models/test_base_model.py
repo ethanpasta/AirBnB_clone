@@ -38,8 +38,8 @@ class TestBaseModel_3(unittest.TestCase):
         then = datetime.utcnow()
         my_model = BaseModel()
         now = datetime.utcnow()
-        self.assertTrue(then < my_model.created_at < now)
-        self.assertTrue(then < my_model.updated_at < now)
+        self.assertTrue(then <= my_model.created_at <= now)
+        self.assertTrue(then <= my_model.updated_at <= now)
         self.assertTrue(my_model.created_at <= my_model.updated_at)
 
     def test_init_id(self):
@@ -68,7 +68,7 @@ class TestBaseModel_3(unittest.TestCase):
         updated_at = my_model.updated_at
         my_model.save()
         now = datetime.utcnow()
-        self.assertTrue(then < updated_at < my_model.updated_at < now)
+        self.assertTrue(then <= updated_at <= my_model.updated_at)
 
     def test_to_dict_method(self):
         """
@@ -84,7 +84,7 @@ class TestBaseModel_3(unittest.TestCase):
 
         types = [str,
                  "updated_at",
-                 "cretaed_at",
+                 "created_at",
                  "__class__",
                  "id"]
         self.assertTrue(all(isinstance(v, types[0])

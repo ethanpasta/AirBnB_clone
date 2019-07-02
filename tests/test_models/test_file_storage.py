@@ -125,7 +125,8 @@ class TestFileStorage_5(unittest.TestCase):
         file = storage._FileStorage__file_path
         my_model = BaseModel()
         updated = my_model.__dict__["updated_at"]
-        obj = storage.all()["{}.{}".format(my_model.__class__.__name__, my_model.id)]
+        obj = storage.all()[
+            "{}.{}".format(my_model.__class__.__name__, my_model.id)]
 
         self.assertEqual(obj.updated_at, updated)
 
@@ -149,7 +150,7 @@ class TestFileStorage_5(unittest.TestCase):
         self.assertEqual(storage.all(), {})
         BaseModel()
         self.assertTrue(storage.all() != {})
-        #print(d)
+        # print(d)
 
 
 if __name__ == "__main__":
