@@ -7,7 +7,9 @@ import uuid
 from datetime import datetime
 from models.base_model import BaseModel
 
+
 class TestBaseModel_3(unittest.TestCase):
+
     """Unit test for BaseModel"""
 
     def test_basic_test(self):
@@ -18,7 +20,7 @@ class TestBaseModel_3(unittest.TestCase):
         my_model.name = "Holberton"
         my_model.my_number = 89
         self.assertEqual([my_model.name, my_model.my_number],
-                         ["Holberton"  , 89])
+                         ["Holberton", 89])
 
     def test_init(self):
         """
@@ -85,16 +87,17 @@ class TestBaseModel_3(unittest.TestCase):
                  "cretaed_at",
                  "__class__",
                  "id"]
-        self.assertTrue(all(type(v) == types[0]
+        self.assertTrue(all(isinstance(v, types[0])
                             for k, v in d.items() if k in types[1:]))
 
         types = [int,
                  "my_number"]
-        self.assertTrue(all(type(v) == types[0]
+        self.assertTrue(all(isinstance(v, types[0])
                             for k, v in d.items() if k in types[1:]))
 
 
 class TestBaseModel_4(unittest.TestCase):
+
     """
     Test @kwargs argument for BaseModel constructor
     """
@@ -108,8 +111,8 @@ class TestBaseModel_4(unittest.TestCase):
         my_model.my_number = 89
         my_model_json = my_model.to_dict()
         my_new_model = BaseModel(**my_model_json)
-        self.assertTrue(type(my_new_model.created_at) == datetime)
-        self.assertTrue(type(my_new_model.updated_at) == datetime)
+        self.assertTrue(isinstance(my_new_model.created_at, datetime))
+        self.assertTrue(isinstance(my_new_model.updated_at, datetime))
         self.assertFalse(my_model is my_new_model)
         self.assertEqual(my_new_model.to_dict(), my_model_json)
 

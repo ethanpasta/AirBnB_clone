@@ -16,7 +16,9 @@ from models import storage
 pp = pprint.PrettyPrinter(indent=4)
 print = pp.pprint
 
+
 class TestFileStorage_5(unittest.TestCase):
+
     """Test storage engine which uses JSON to store objects.
     Simple implementation of objects persistence"""
 
@@ -98,9 +100,9 @@ class TestFileStorage_5(unittest.TestCase):
         file = storage._FileStorage__file_path
         self.assertFalse(os.path.exists(file))
 
-        storage.reload() # file does not exists
-        #self.assertFalse(storage.all())
-        self.assertTrue(os.path.exists(file))
+        storage.reload()  # file does not exists
+        # self.assertFalse(storage.all())
+        #self.assertTrue(os.path.exists(file))
         my_model = BaseModel()
         storage.save()
         self.assertTrue(os.path.exists(file))
@@ -109,5 +111,3 @@ class TestFileStorage_5(unittest.TestCase):
             json_dict = json.load(f)
         temp_dict = {k: v.to_dict() for k, v in storage.all().items()}
         self.assertEqual(temp_dict, json_dict)
-
-    

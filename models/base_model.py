@@ -7,6 +7,7 @@ import models
 
 
 class BaseModel:
+
     """Base model class"""
 
     def __init__(self, *args, **kwargs):

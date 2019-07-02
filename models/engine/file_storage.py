@@ -6,6 +6,7 @@ from models.user import User
 
 
 class FileStorage:
+
     """Custom Class FileStorage"""
     __file_path = "file.json"
     __objects = {}

@@ -13,12 +13,10 @@ from models import storage
 
 
 class HBNBCommand(cmd.Cmd):
+
     """Console class"""
 
-    def __init__(self):
-        """Console contructor"""
-        cmd.Cmd.__init__(self)
-        self.prompt = '(hbnb) '
+    prompt = '(hbnb) '
 
     def emptyline(self):
         """Do nothing when empty line is entered"""
@@ -38,7 +36,8 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, line):
         """
-        Creates a new instance of @cls_name class, and prints the new instance's ID.
+        Creates a new instance of @cls_name class,
+        and prints the new instance's ID.
         Arguments to enter with command: <class name>
         Example: 'create User'
         """
@@ -132,7 +131,8 @@ class HBNBCommand(cmd.Cmd):
         """
         Updates an instance based on the class name and id by adding or
         updating an attribute
-        Arguments to enter with command: <class name> <id> <attribute name> "<attribute value>"
+        Arguments to enter with command:
+        <class name> <id> <attribute name> "<attribute value>"
         Example: 'update User 1234-1234-1234 my_name "Bob"'
         """
         if not line:
@@ -190,7 +190,8 @@ class HBNBCommand(cmd.Cmd):
                     "update": self.do_update}
         args = re.match(r"^(\w+)\.(\w+)\((.*)\)", line)
         args = args.groups()
-        if len(args) < 2 or args[0] not in names or args[1] not in commands.keys():
+        if len(args) < 2 or args[0] not in names \
+           or args[1] not in commands.keys():
             super().default(line)
             return
         if args[1] in ["all", "count"]:
