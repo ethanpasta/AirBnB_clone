@@ -157,11 +157,8 @@ class HBNBCommand(cmd.Cmd):
                 attr_v = args[3]
                 class_attr = type(d[key]).__dict__
                 if attr_k in class_attr.keys():
-                    print("in")
                     attr_v = type(class_attr[attr_k])(attr_v)
                 setattr(d[key], attr_k, attr_v)
-                print("key: {}, value: {}, type of value: {}".format(
-                    attr_k, attr_v, type(d[key].__dict__[attr_k])))
                 storage.save()
             else:
                 print(errors[0])
