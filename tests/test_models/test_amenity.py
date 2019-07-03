@@ -98,36 +98,5 @@ class TestAmenity_8(unittest.TestCase):
         self.assertTrue(all(isinstance(v, types[0])
                             for k, v in d.items() if k in types[1:]))
 
-
-class TestAmenity_kwargs(unittest.TestCase):
-
-    """
-    Test @kwargs argument for Amenity constructor
-    """
-
-    def test_dict(self):
-        """
-        Basic test of init method
-        """
-        my_model = Amenity()
-        my_model.name = "Holberton"
-        my_model.my_number = 89
-        my_model_json = my_model.to_dict()
-        my_new_model = Amenity(**my_model_json)
-        self.assertTrue(isinstance(my_new_model.created_at, datetime))
-        self.assertTrue(isinstance(my_new_model.updated_at, datetime))
-        self.assertFalse(my_model is my_new_model)
-        self.assertEqual(my_new_model.to_dict(), my_model_json)
-
-    # def test_dict_check_types(self):
-    #     """
-    #     Test the type of updated_at and created_at
-    #     """
-    #     my_model = Amenity()
-    #     my_model.name = "Holberton"
-    #     my_model.my_number = 89
-    #     my_model_json = my_model.to_dict()
-    #     my_new_model = Amenity(**my_model_json)
-    #     self.assertTrue(type(my_new_model.created_at) == datetime)
-    #     self.assertFalse(my_model is my_new_model)
-    #     self.assertEqual(my_new_model.to_dict(), my_model_json)
+if __name__ == '__main__':
+    unittest.main()
