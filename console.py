@@ -214,7 +214,11 @@ class HBNBCommand(cmd.Cmd):
                 for k, v in d.items():
                     cmd = str(args[1]) + " " + str(args[0]) + " " \
                            + str(a[0]) + " " + str(k) + " " + str(v)
-                    self.onecmd(cmd)
+                    # r = self.onecmd(cmd)
+                    r = commands[args[1]](str(args[0]) + " " \
+                           + str(a[0]) + " " + str(k) + " " + str(v))
+                    if not r:
+                        break
             else:
                 rest = args[2].split(", ")
                 commands[args[1]](args[0] + " " + rest[0] + " " +
