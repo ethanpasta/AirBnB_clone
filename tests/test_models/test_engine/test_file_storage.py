@@ -183,7 +183,7 @@ class TestFileStorage_5(unittest.TestCase):
         fs._FileStorage__objects = {}
         self.assertFalse(fs.all())
         fs.new(BaseModel())
-        self.assertTrue(ds.all())
+        self.assertTrue(fs.all())
         # obj = BaseModel()
         # fs.new(obj)
         # self.assertTrue(fs.all())
