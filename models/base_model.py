@@ -8,7 +8,7 @@ import models
 
 class BaseModel:
 
-    """Base model class"""
+    """Custom base model class"""
 
     def __init__(self, *args, **kwargs):
         """Initialization method for instance"""
