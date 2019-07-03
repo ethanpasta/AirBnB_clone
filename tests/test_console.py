@@ -167,5 +167,18 @@ class TestConsole_6(unittest.TestCase):
                 self.assertFalse(cli.onecmd("destroy {} {}".format(i, uid)))
             self.assertEqual(fakeOutput.getvalue().strip(), self.err[3])
 
+        # Test destroy functionality
+        ids = []
+        for i in self.cls:
+            with patch('sys.stdout', new=StringIO()) as fakeOutput:
+                self.assertFalse(cli.onecmd("create {}".format(i)))
+            ids.append(fakeOutput.getvalue().strip())
+
+        for i, e in enumerate(self.cls):
+            with patch('sys.stdout', new=StringIO()) as fakeOutput:
+                self.assertFalse(cli.onecmd("destroy {} {}".format(e, ids[i])))
+                key = e + "." + ids[i]
+            self.assertFalse(key in storage.all())
+
 if __name__ == "__main__":
     unittest.main()
