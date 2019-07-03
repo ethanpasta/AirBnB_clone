@@ -207,10 +207,13 @@ class HBNBCommand(cmd.Cmd):
         elif args[1] == "update":
             a = args[2].split(", {")
             if len(a) > 1:
-                d = json.loads("{" + a[1])
+                b = '{' + a[1]
+                c = b.split(":", 1)
+                c[0] = c[0].replace("\'", "\"") + ":"
+                d = json.loads(''.join(c))
                 for k, v in d.items():
                     cmd = str(args[1]) + " " + str(args[0]) + " " \
-                          + str(a[0]) + " " + str(k) + " " + str(v)
+                           + str(a[0]) + " " + str(k) + " " + str(v)
                     self.onecmd(cmd)
             else:
                 rest = args[2].split(", ")
