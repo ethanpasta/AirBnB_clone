@@ -205,28 +205,18 @@ class HBNBCommand(cmd.Cmd):
         elif args[1] in ["show", "destroy"]:
             commands[args[1]](args[0] + ' ' + args[2])
         elif args[1] == "update":
-            a = args[2].split(", {")
-            if len(a) > 1:
-                b = '{' + a[1]
-                c = b.split(":", 1)
-                c[0] = c[0].replace("\'", "\"") + ":"
-                d = json.loads(''.join(c))
-                for k, v in d.items():
-                    cmd = str(args[1]) + " " + str(args[0]) + " " \
-                           + str(a[0]) + " " + str(k) + " " + str(v)
-                    # r = self.onecmd(cmd)
-                    r = commands[args[1]](str(args[0]) + " " \
-                           + str(a[0]) + " " + str(k) + " " + str(v))
-                    if not r:
-                        break
+            params = re.match(r"\"(.+?)\", (.+)", args[2])
+            if params.groups()[1][0] == '{':
+                print(params.groups()[1])
+                dic_p = json.loads('"{}"'.format(params.groups()[1]))
+                print(dic_p)
+  #              for k, v in dic_p.items():
+#                    self.do_user(args[0] + " " + params.groups()[0] + " " +
+ #                                     k + " " + v)
             else:
-                rest = args[2].split(", ")
-                commands[args[1]](args[0] + " " + rest[0] + " " +
-                                  rest[1] + " " + rest[2])
-
-    def do_mymy(self, line):
-        """Onecmd"""
-        self.onecmd(line)
+                rest = params.groups()[1].split(", ")
+                commands[args[1]](args[0] + " " + params.groups()[0] + " " +
+                                  rest[0] + " " + rest[1])
 
 if __name__ == '__main__':
     cli = HBNBCommand()
