@@ -55,11 +55,11 @@ class TestFileStorage_5(unittest.TestCase):
         self.assertTrue(all(type(v) == BaseModel)
                         for v in dict_obj.values())
 
-        # class_dict = {k.split(".")[1]: k.split(".")[0] for k in dict_obj}
-        # self.assertTrue(all(issubclass(eval(i), BaseModel)
-        #                     for i in class_dict.values()))
-        # self.assertTrue(all(uuid.UUID(i).version == 4
-        #                     for i in class_dict))
+        class_dict = {k.split(".")[1]: k.split(".")[0] for k in dict_obj}
+        self.assertTrue(all(i == "BaseModel")
+                        for i in class_dict.values())
+        self.assertTrue(all(uuid.UUID(i).version == 4
+                            for i in class_dict))
 
     def test_all_method(self):
         """Checks whether all returning dict of objects"""
@@ -75,11 +75,11 @@ class TestFileStorage_5(unittest.TestCase):
         self.assertTrue(all(type(v) == BaseModel)
                         for v in dict_obj.values())
 
-        # class_dict = {k.split(".")[1]: k.split(".")[0] for k in dict_obj}
-        # self.assertTrue(all(issubclass(eval(i), BaseModel)
-        #                     for i in class_dict.values()))
-        # self.assertTrue(all(uuid.UUID(i).version == 4
-        #                     for i in class_dict))
+        class_dict = {k.split(".")[1]: k.split(".")[0] for k in dict_obj}
+        self.assertTrue(all(i == "BaseModel")
+                        for i in class_dict.values())
+        self.assertTrue(all(uuid.UUID(i).version == 4
+                            for i in class_dict))
 
     def test_new_method(self):
         """Simple check"""
@@ -103,6 +103,14 @@ class TestFileStorage_5(unittest.TestCase):
             json_dict = json.load(f)
         temp_dict = {k: v.to_dict() for k, v in storage.all().items()}
         self.assertEqual(temp_dict, json_dict)
+
+    def test_save_method_1(self):
+        """Test save method"""
+        obj = BaseModel()
+        storage.save()
+        with open("file.json", "r") as f:
+            json_dict = json.load(f)
+        self.assertIn(obj.to_dict(), json_dict.values())
 
     def test_reload_method(self):
         """Checks reload method for correct deserialization"""
@@ -133,6 +141,14 @@ class TestFileStorage_5(unittest.TestCase):
         with self.assertRaises(KeyError):
             storage.all()["Non existent key"]
 
+    def test_reload_method_2(self):
+        """Test reload method"""
+        obj = BaseModel()
+        storage.save()
+        with open("file.json", "r") as f:
+            json_dict = json.load(f)
+        self.assertIn(obj.to_dict(), json_dict.values())
+
     def test_save_basemodel(self):
         """Checks save of the BaseClass"""
         file = storage._FileStorage__file_path
@@ -148,22 +164,6 @@ class TestFileStorage_5(unittest.TestCase):
 
         self.assertEqual(obj.updated_at, my_model.updated_at)
         self.assertTrue(os.path.exists(file))
-
-    # def test_init_and_new(self):
-    #     """Tests init and new. If the arguments is dict,
-    #     then don't call save() of FileStorage"""
-    #     self.assertEqual(storage.all(), {})
-    #     d = {"BaseModel.ee49c413-023a-4b49-bd28-f2936c95460d":
-    #          {"my_number": 89, "__class__": "BaseModel",
-    #           "updated_at": "2017-09-28T21:07:25.047381",
-    #           "created_at": "2017-09-28T21:07:25.047372",
-    #           "name": "Holberton",
-    #           "id": "ee49c413-023a-4b49-bd28-f2936c95460d"}}
-    #     BaseModel(**d)
-    #     self.assertEqual(storage.all(), {})
-    #     BaseModel()
-    #     self.assertTrue(storage.all() != {})
-    #     # print(d)
 
     def test_id_attr(self):
         """Tests id attribute"""
@@ -182,9 +182,11 @@ class TestFileStorage_5(unittest.TestCase):
         fs = FileStorage()
         fs._FileStorage__objects = {}
         self.assertFalse(fs.all())
-        fs.new(BaseModel())
-        self.assertTrue(ds.all())
-
+        obj = BaseModel()
+        fs.new(obj)
+        self.assertTrue(fs.all())
+        key = "{}.{}".format(obj.__class__.__name__, obj.id)
+        self.assertTrue(key in storage.all())
 
 if __name__ == "__main__":
     unittest.main()
