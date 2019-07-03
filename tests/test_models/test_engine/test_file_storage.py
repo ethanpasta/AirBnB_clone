@@ -104,13 +104,13 @@ class TestFileStorage_5(unittest.TestCase):
         temp_dict = {k: v.to_dict() for k, v in storage.all().items()}
         self.assertEqual(temp_dict, json_dict)
 
-    # def test_save_method_1(self):
-    #     """Test save method"""
-    #     obj = BaseModel()
-    #     storage.save()
-    #     with open("file.json", "r") as f:
-    #         json_dict = json.load(f)
-    #     self.assertIn(obj.to_dict(), json_dict.values())
+    def test_save_method_1(self):
+        """Test save method"""
+        obj = BaseModel()
+        storage.save()
+        with open("file.json", "r") as f:
+            json_dict = json.load(f)
+        self.assertIn(obj.to_dict(), json_dict.values())
 
     def test_reload_method(self):
         """Checks reload method for correct deserialization"""
@@ -141,13 +141,13 @@ class TestFileStorage_5(unittest.TestCase):
         with self.assertRaises(KeyError):
             storage.all()["Non existent key"]
 
-    # def test_reload_method_2(self):
-    #     """Test reload method"""
-    #     obj = BaseModel()
-    #     storage.save()
-    #     with open("file.json", "r") as f:
-    #         json_dict = json.load(f)
-    #     self.assertIn(obj.to_dict(), json_dict.values())
+    def test_reload_method_2(self):
+        """Test reload method"""
+        obj = BaseModel()
+        storage.save()
+        with open("file.json", "r") as f:
+            json_dict = json.load(f)
+        self.assertIn(obj.to_dict(), json_dict.values())
 
     def test_save_basemodel(self):
         """Checks save of the BaseClass"""
