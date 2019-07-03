@@ -3,40 +3,33 @@
 import unittest
 import os
 import sys
-import pprint
-from console import HBNBCommand
-from models import storage
 from unittest.mock import create_autospec
 from unittest.mock import patch
 from io import StringIO
-
-# Pretty print, redifined print
-pp = pprint.PrettyPrinter(indent=4)
-pp = pp.pprint
+from console import HBNBCommand
+from models import storage
 
 
 class TestConsole_6(unittest.TestCase):
-
     """Unint tests for console"""
-
-    err = ["** class name missing **",
-           "** class doesn't exist **",
-           "** instance id missing **",
-           "** no instance found **",
-           ""]
-
-    cls = ["BaseModel",
-           "User",
-           "State",
-           "City",
-           "Place",
-           "Amenity",
-           "Review"]
 
     def setUp(self):
         """Redirecting stdin and stdout"""
         self.mock_stdin = create_autospec(sys.stdin)
         self.mock_stdout = create_autospec(sys.stdout)
+        self.err = ["** class name missing **",
+                    "** class doesn't exist **",
+                    "** instance id missing **",
+                    "** no instance found **",
+                    ]
+
+        self.cls = ["BaseModel",
+                    "User",
+                    "State",
+                    "City",
+                    "Place",
+                    "Amenity",
+                    "Review"]
 
     def create(self, server=None):
         """Redirects stdin and stdout to mock module"""
@@ -70,6 +63,11 @@ class TestConsole_6(unittest.TestCase):
                     "update"]
         for i in commands:
             self.assertTrue(i in s)
+
+        for i in commands:
+            self.assertFalse(cli.onecmd("help {}".format(i)))
+            s = self.last_write(10)
+            self.assertTrue(s)
 
     def test_empty_line(self):
         """Tests empty line"""
@@ -141,3 +139,33 @@ class TestConsole_6(unittest.TestCase):
                 key = e + "." + ids[i]
             self.assertEqual(fakeOutput.getvalue().strip(),
                              str(storage.all()[key]))
+
+    def test_destroy(self):
+        """Test destroy"""
+        cli = self.create()
+        # Test unknown class
+        with patch('sys.stdout', new=StringIO()) as fakeOutput:
+            self.assertFalse(cli.onecmd("destroy MyClass"))
+        self.assertEqual(self.err[1], fakeOutput.getvalue().strip())
+
+        # Test without args
+        with patch('sys.stdout', new=StringIO()) as fakeOutput:
+            self.assertFalse(cli.onecmd("destroy"))
+        self.assertEqual(self.err[0], fakeOutput.getvalue().strip())
+
+        # Test without ID
+        for i in self.cls:
+            with patch('sys.stdout', new=StringIO()) as fakeOutput:
+                self.assertFalse(cli.onecmd("destroy {}".format(i)))
+            self.assertEqual(fakeOutput.getvalue().strip(), self.err[2])
+
+        # Test no instance found
+        uid = "437ae424409acc0f564-4cdff"
+        storage._FileStorage__objects = {}
+        for i in self.cls:
+            with patch('sys.stdout', new=StringIO()) as fakeOutput:
+                self.assertFalse(cli.onecmd("destroy {} {}".format(i, uid)))
+            self.assertEqual(fakeOutput.getvalue().strip(), self.err[3])
+
+if __name__ == "__main__":
+    unittest.main()
