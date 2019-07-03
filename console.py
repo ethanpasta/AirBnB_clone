@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """"Console v 0.0.1"""
 import cmd
+import json
 import re
 from models.base_model import BaseModel
 from models.user import User
@@ -204,9 +205,21 @@ class HBNBCommand(cmd.Cmd):
         elif args[1] in ["show", "destroy"]:
             commands[args[1]](args[0] + ' ' + args[2])
         elif args[1] == "update":
-            rest = args[2].split(", ")
-            commands[args[1]](args[0] + " " + rest[0] + " " +
-                              rest[1] + " " + rest[2])
+            a = args[2].split(", {")
+            if len(a) > 1:
+                d = json.loads("{" + a[1])
+                for k, v in d.items():
+                    cmd = str(args[1]) + " " + str(args[0]) + " " \
+                          + str(a[0]) + " " + str(k) + " " + str(v)
+                    self.onecmd(cmd)
+            else:
+                rest = args[2].split(", ")
+                commands[args[1]](args[0] + " " + rest[0] + " " +
+                                  rest[1] + " " + rest[2])
+
+    def do_mymy(self, line):
+        """Onecmd"""
+        self.onecmd(line)
 
 if __name__ == '__main__':
     cli = HBNBCommand()
