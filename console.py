@@ -17,16 +17,47 @@ class HBNBCommand(cmd.Cmd):
     """Console class"""
 
     prompt = '(hbnb) '
-    __err_msgs = {
-        'class_missing': "** class name missing **",
-        'class_exist': "** class doesn't exist **",
-        'instance_missing': "** instance id missing **",
-        'instance_found': "** no instance found **",
-        'attribute_missing': "** attribute name missing **",
-        'value_missing': "** value missing **"
-    }
-    __classes = ["BaseModel", "User", "State", "City", "Amenity",
-                 "Place", "Review"]
+
+    def my_errors(self, line, num_args):
+        """Method displays different error messages"""
+        classes = ["BaseModel", "User", "State", "City", "Amenity",
+                   "Place", "Review"]
+        msg = [
+            "** class name missing **",
+            "** class doesn't exist **",
+            "** instance id missing **",
+            "** no instance found **",
+            "** attribute name missing **",
+            "** value missing **"]
+        if not line:
+            print(msg[0])
+            return 1
+        args = line.split()
+        if num_args >= 1 and args[0] not in classes:
+            print(msg[1])
+            return 1
+        elif num_args == 1:
+            return 0
+        if num_args >= 2 and len(args) < 2:
+            print(msg[2])
+            return 1
+        d = storage.all()
+        for i in range(len(args)):
+            if args[i][0] == '"':
+                args[i] = args[i].replace('"', "")
+        key = args[0] + '.' + args[1]
+        if num_args >= 2 and key not in d:
+            print(msg[3])
+            return 1
+        elif num_args == 2:
+            return 0
+        if num_args >= 4 and len(args) < 3:
+            print(msg[4])
+            return 1
+        if num_args >= 4 and len(args) < 4:
+            print(msg[5])
+            return 1
+        return 0
 
     def emptyline(self):
         """Do nothing when empty line is entered"""
@@ -51,20 +82,16 @@ class HBNBCommand(cmd.Cmd):
         Arguments to enter with command: <class name>
         Example: 'create User'
         """
-        if not line:
-            print(self.__err_msgs['class_missing'])
+        if (self.my_errors(line, 1) == 1):
             return
         args = line.split(" ")
-        try:
-            # args[0] contains class name, create new instance of that class
-            obj = eval(args[0])()
+        # args[0] contains class name, create new instance of that class
+        obj = eval(args[0])()
 
-            # updates 'updated_at' attribute, and saves into JSON file
-            obj.save()
+        # updates 'updated_at' attribute, and saves into JSON file
+        obj.save()
 
-            print(obj.id)
-        except NameError:
-            print(self.__err_msgs['class_exist'])
+        print(obj.id)
 
     def do_show(self, line):
         """
@@ -72,24 +99,15 @@ class HBNBCommand(cmd.Cmd):
         Arguments to enter with command: <class name> <id>
         Example: 'show User 1234-1234-1234'
         """
-        if not line:
-            print(self.__err_msgs['class_missing'])
+
+        if (self.my_errors(line, 2) == 1):
             return
         args = line.split()
-        if args[0] not in self.__classes:
-            print(self.__err_msgs['class_exist'])
-            return
-        if len(args) < 2:
-            print(self.__err_msgs['instance_missing'])
-            return
         d = storage.all()
         if args[1][0] == '"':
             args[1] = args[1].replace('"', "")
         key = args[0] + '.' + args[1]
-        if key in d:
-            print(d[key])
-        else:
-            print(self.__err_msgs['instance_found'])
+        print(d[key])
 
     def do_destroy(self, line):
         """
@@ -97,25 +115,15 @@ class HBNBCommand(cmd.Cmd):
         Arguments to enter with command: <class name> <id>
         Example: 'destroy User 1234-1234-1234'
         """
-        if not line:
-            print(self.__err_msgs['class_missing'])
+        if (self.my_errors(line, 2) == 1):
             return
         args = line.split()
-        if args[0] not in self.__classes:
-            print(self.__err_msgs['class_exist'])
-            return
-        if len(args) != 2:
-            print(self.__err_msgs['instance_missing'])
-            return
         d = storage.all()
         if args[1][0] == '"':
             args[1] = args[1].replace('"', "")
         key = args[0] + '.' + args[1]
-        if key in d:
-            del d[key]
-            storage.save()
-        else:
-            print(self.__err_msgs['instance_found'])
+        del d[key]
+        storage.save()
 
     def do_all(self, line):
         """
@@ -128,11 +136,9 @@ class HBNBCommand(cmd.Cmd):
             print([str(x) for x in d.values()])
             return
         args = line.split()
-        if args[0] not in self.__classes:
-            print(self.__err_msgs['class_exist'])
-        else:
-            print([str(v) for v in d.values() if
-                   v.__class__.__name__ == args[0]])
+        if (self.my_errors(line, 1) == 1):
+            return
+        print([str(v) for v in d.values() if v.__class__.__name__ == args[0]])
 
     def do_update(self, line):
         """
@@ -142,36 +148,25 @@ class HBNBCommand(cmd.Cmd):
         <class name> <id> <attribute name> "<attribute value>"
         Example: 'update User 1234-1234-1234 my_name "Bob"'
         """
-        if not line:
-            print(self.__err_msgs['class_missing'])
+        if (self.my_errors(line, 4) == 1):
             return
         args = line.split()
-        if args[0] not in self.__classes:
-            print(self.__err_msgs['class_exist'])
-            return
-        if len(args) < 2:
-            print(self.__err_msgs['instance_missing'])
-            return
         d = storage.all()
         for i in range(len(args[1:]) + 1):
             if args[i][0] == '"':
                 args[i] = args[i].replace('"', "")
         key = args[0] + '.' + args[1]
-        if key not in d:
-            print(self.__err_msgs['instance_exist'])
-            return
-        if len(args) < 3:
-            print(self.__err_msgs['attribute_missing'])
-        if len(args) < 4:
-            print9self.__err_msgs['value_missing']
-        if key in d:
-            attr_k = args[2]
-            attr_v = args[3]
-            class_attr = type(d[key]).__dict__
-            if attr_k in class_attr.keys():
+        attr_k = args[2]
+        attr_v = args[3]
+        class_attr = type(d[key]).__dict__
+        if attr_k in class_attr.keys():
+            try:
                 attr_v = type(class_attr[attr_k])(attr_v)
-            setattr(d[key], attr_k, attr_v)
-            storage.save()
+            except Exception:
+                print("Entered wrong value type")
+                return
+        setattr(d[key], attr_k, attr_v)
+        storage.save()
 
     def my_count(self, class_n):
         """Method counts instances of a certain class"""
