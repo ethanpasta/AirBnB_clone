@@ -15,11 +15,12 @@ from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
 from models import storage
+from models.engine.file_storage import FileStorage
 
 
 class TestFileStorage_5(unittest.TestCase):
 
-     """Test storage engine which uses JSON to store objects.
+    """Test storage engine which uses JSON to store objects.
      Simple implementation of objects persistence"""
 
     def setUp(self):
@@ -41,7 +42,7 @@ class TestFileStorage_5(unittest.TestCase):
     def test_simple_check(self):
         """Simple check"""
         file = storage._FileStorage__file_path
-        self.assertTrue(type(file) == str)
+        self.assertTrue(isinstance(file, str))
 
         obj1 = BaseModel()
         obj2 = BaseModel()
@@ -50,7 +51,7 @@ class TestFileStorage_5(unittest.TestCase):
         obj5 = BaseModel()
 
         dict_obj = storage._FileStorage__objects
-        self.assertTrue(type(dict_obj) == dict)
+        self.assertTrue(isinstance(dict_obj, dict))
         self.assertTrue(all(isinstance(v, BaseModel)
                             for v in dict_obj.values()))
 
@@ -70,7 +71,7 @@ class TestFileStorage_5(unittest.TestCase):
 
         dict_obj = storage.all()
         self.assertEqual(dict_obj, storage._FileStorage__objects)
-        self.assertTrue(type(dict_obj) == dict)
+        self.assertTrue(isinstance(dict_obj, dict))
         self.assertTrue(all(isinstance(v, BaseModel)
                             for v in dict_obj.values()))
 
@@ -119,6 +120,16 @@ class TestFileStorage_5(unittest.TestCase):
         temp_dict = {k: v.to_dict() for k, v in storage.all().items()}
         self.assertEqual(temp_dict, json_dict)
 
+    def test_reload_method_1(self):
+        """Test reload method"""
+        file = FileStorage()
+        my_model = BaseModel()
+        key = "BaseModel" + "." + my_model.id
+        file.new(my_model)
+        file.save()
+        file.reload()
+        self.assertTrue(file.all()[key])
+
     def test_save_basemodel(self):
         """Checks save of the BaseClass"""
         file = storage._FileStorage__file_path
@@ -135,21 +146,5 @@ class TestFileStorage_5(unittest.TestCase):
         self.assertEqual(obj.updated_at, my_model.updated_at)
         self.assertTrue(os.path.exists(file))
 
-     # def test_init_and_new(self):
-     #      """Tests init and new. If the arguments is dict,
-     #      then don't call save() of FileStorage"""
-     #      self.assertEqual(storage.all(), {})
-     #      d = {"BaseModel.ee49c413-023a-4b49-bd28-f2936c95460d":
-     #           {"my_number": 89, "__class__": "BaseModel",
-     #           "updated_at": "2017-09-28T21:07:25.047381",
-     #           "created_at": "2017-09-28T21:07:25.047372",
-     #           "name": "Holberton",
-     #           "id": "ee49c413-023a-4b49-bd28-f2936c95460d"}}
-     #      BaseModel(**d)
-     #      self.assertEqual(storage.all(), {})
-     #      BaseModel()
-     #      self.assertTrue(storage.all() != {})
-
-
 if __name__ == "__main__":
-     unittest.main()
+    unittest.main()
