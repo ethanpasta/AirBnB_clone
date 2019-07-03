@@ -125,5 +125,21 @@ class TestPlace(unittest.TestCase):
         self.assertTrue(all(isinstance(v, types[0])
                             for k, v in d.items() if k in types[1:]))
 
+    def test_attributes(self):
+        """Test attibutes"""
+        self.assertEqual(type(Place.city_id), str)
+        self.assertEqual(type(Place.user_id), str)
+        self.assertEqual(type(Place.name), str)
+        self.assertEqual(type(Place.description), str)
+
+        self.assertEqual(type(Place.number_rooms), int)
+        self.assertEqual(type(Place.number_bathrooms), int)
+        self.assertEqual(type(Place.max_guest), int)
+        self.assertEqual(type(Place.price_by_night), int)
+
+        self.assertEqual(type(Place.latitude), float)
+        self.assertEqual(type(Place.longitude), float)
+        self.assertEqual(type(Place.amenity_ids), list)
+
 if __name__ == '__main__':
     unittest.main()

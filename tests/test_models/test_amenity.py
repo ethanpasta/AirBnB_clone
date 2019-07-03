@@ -98,5 +98,9 @@ class TestAmenity_8(unittest.TestCase):
         self.assertTrue(all(isinstance(v, types[0])
                             for k, v in d.items() if k in types[1:]))
 
+    def test_attributes(self):
+        """Test attibutes"""
+        self.assertEqual(type(Amenity.name), str)
+
 if __name__ == '__main__':
     unittest.main()
