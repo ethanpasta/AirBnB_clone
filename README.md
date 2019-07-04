@@ -3,18 +3,7 @@ AirBnB Clone - The Holberton B&B
 ![Image of hbnb](https://github.com/ethanpasta/AirBnB_clone/blob/Dev/65f4a1dd9c51265f49d0.png)
 
 ## Description
-What you should learn from this project:
-
-* How to create a Python package
-* How to create a command interpreter in Python using the `cmd` module
-* What is Unit testing and how to implement it in a large project
-* How to serialize and deserialize a Class
-* How to write and read a JSON file
-* How to manage `datetime`
-* What is an `UUID`
-* What is `*args` and how to use it
-* What is `**kwargs` and how to use it
-* How to handle named arguments in a function
+This is the final second trimester project at Holberton School San Francisco. It is the first full web application, combining HTML/CSS, database storage, API, front-end integration, etc.
 ---
 
 
