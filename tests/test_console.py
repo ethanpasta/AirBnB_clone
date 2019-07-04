@@ -1,10 +1,11 @@
 #!/usr/bin/python3
-"""Unit tests for console using Mock module from python standard library"""
-import unittest
+"""Unit tests for console using Mock module from python standard library
+   Checks console capturing stdout into a StringIO object
+"""
 import os
 import sys
-from unittest.mock import create_autospec
-from unittest.mock import patch
+import unittest
+from unittest.mock import create_autospec, patch
 from io import StringIO
 from console import HBNBCommand
 from models import storage
@@ -39,11 +40,11 @@ class TestConsole_6(unittest.TestCase):
                     "Review"]
 
     def create(self, server=None):
-        """Redirects stdin and stdout to mock module"""
+        """Redirects stdin and stdout to the mock module"""
         return HBNBCommand(stdin=self.mock_stdin, stdout=self.mock_stdout)
 
     def last_write(self, nr=None):
-        """Returns last `n` output lines"""
+        """Returns last n output lines"""
         if nr is None:
             return self.mock_stdout.write.call_args[0][0]
         return "".join(map(lambda c: c[0][0],
