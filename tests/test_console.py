@@ -87,11 +87,13 @@ class TestConsole_6(unittest.TestCase):
     def test_empty_line(self):
         """Tests empty line"""
         cli = self.create()
-        self.assertFalse(cli.onecmd("help"))
-        ss = self.last_write(10)
+        self.assertFalse(cli.onecmd("\n"))
+        s = self.last_write(10)
+        self.assertFalse(s)
+
         self.assertFalse(cli.onecmd(""))
         s = self.last_write(10)
-        self.assertEqual(ss, s)
+        self.assertFalse(s)
 
     def test_create(self):
         """Tests create"""
@@ -336,22 +338,16 @@ class TestConsole_6(unittest.TestCase):
             self.assertTrue("'first_name': 'John'"
                             in fakeOutput.getvalue().strip())
 
-        ids = []  # Generate ids for testing
-        for i in self.cls:
-            with patch('sys.stdout', new=StringIO()) as fakeOutput:
-                self.assertFalse(cli.onecmd("create {}".format(i)))
-            ids.append(fakeOutput.getvalue().strip())
+        with patch('sys.stdout', new=StringIO()) as fakeOutput:
+            self.assertFalse(cli.onecmd("create BaseModel"))
+        ids = fakeOutput.getvalue().strip()
 
-        for i, e in enumerate(self.cls):
-            with patch('sys.stdout', new=StringIO()) as fakeOutput:
-                self.assertFalse(cli.onecmd(
-                    'update {} {} first_name "John"'.format(e, ids[i])))
+        with patch('sys.stdout', new=StringIO()) as fakeOutput:
+            self.assertFalse(cli.onecmd(
+                'update BaseModel {} first_name "John"'.format(ids)))
 
-        for i, e in enumerate(self.cls):
-            with patch('sys.stdout', new=StringIO()) as fakeOutput:
-                self.assertFalse(cli.onecmd("{}.show({})".format(e, ids[i])))
-            self.assertTrue("'first_name': 'John'"
-                            in fakeOutput.getvalue().strip())
+        key = "BaseModel" + "." + ids
+        self.assertEqual(storage.all()[key].first_name, "John")
 
     def test_update_dictionary(self):
         """Tests dictionary update"""
