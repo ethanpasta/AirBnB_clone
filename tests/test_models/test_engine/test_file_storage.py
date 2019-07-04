@@ -55,12 +55,6 @@ class TestFileStorage_5(unittest.TestCase):
         self.assertTrue(all(type(v) == BaseModel)
                         for v in dict_obj.values())
 
-        # class_dict = {k.split(".")[1]: k.split(".")[0] for k in dict_obj}
-        # self.assertTrue(all(i == "BaseModel")
-        #                 for i in class_dict.values())
-        # self.assertTrue(all(uuid.UUID(i).version == 4
-        #                     for i in class_dict))
-
     def test_all_method(self):
         """Checks whether all returning dict of objects"""
         obj1 = BaseModel()
@@ -74,12 +68,6 @@ class TestFileStorage_5(unittest.TestCase):
         self.assertTrue(type(dict_obj) == dict)
         self.assertTrue(all(type(v) == BaseModel)
                         for v in dict_obj.values())
-
-        # class_dict = {k.split(".")[1]: k.split(".")[0] for k in dict_obj}
-        # self.assertTrue(all(i == "BaseModel")
-        #                 for i in class_dict.values())
-        # self.assertTrue(all(uuid.UUID(i).version == 4
-        #                     for i in class_dict))
 
     def test_new_method(self):
         """Simple check"""
@@ -151,60 +139,25 @@ class TestFileStorage_5(unittest.TestCase):
 
     def test_save_basemodel(self):
         """Checks save of the BaseClass"""
-        file = storage._FileStorage__file_path
         my_model = BaseModel()
-        updated = my_model.__dict__["updated_at"]
-        obj = storage.all()[
-            "{}.{}".format(my_model.__class__.__name__, my_model.id)]
 
-        self.assertEqual(obj.updated_at, updated)
-
-        self.assertFalse(os.path.exists(file))
         my_model.save()
-        key = "BaseModel.{}".format(my_model.id)
+        time = my_model.to_dict()["updated_at"]
 
-        self.assertEqual(obj.updated_at, my_model.updated_at)
         with open("file.json", "r") as f:
             cont = f.read()
-        self.assertTrue(key in cont)
-        self.assertTrue(os.path.exists(file))
+        self.assertTrue(time in cont)
 
-    def test_id_attr(self):
-        """Tests id attribute"""
-        b = BaseModel()
-        self.assertTrue(hasattr(b, "id"))
-
-        # test_02
+    def test_reload_method_1(self):
+        """Reload test"""
         fs = FileStorage()
-        fs._FileStorage__objects = {}
-        fs.new(BaseModel())
+        b = BaseModel()
+        key = "BaseModel" + '.' + b.id
+        fs.new(b)
         fs.save()
-        self.assertTrue(os.path.isfile("file.json"))
-
-    # def test_return_type(self):
-    #     """Test return type"""
-    #     fs = FileStorage()
-    #     fs._FileStorage__objects = {}
-    #     self.assertFalse(fs.all())
-    #     fs.new(BaseModel())
-    #     self.assertTrue(ds.all())
-        # obj = BaseModel()
-        # fs.new(obj)
-        # self.assertTrue(fs.all())
-        # key = "{}.{}".format(obj.__class__.__name__, obj.id)
-        # self.assertTrue(key in storage.all())
-
-    def test_aaaa_last_test(self):
-        """Last Test"""
-        obj1 = BaseModel()
-        obj2 = BaseModel()
-        with open("file.json", "w") as f:
-            json.dump(obj1.to_dict(), f)
-            json.dump(obj2.to_dict(), f)
-        storage.reload()
-        l = [i.to_dict() for i in storage.all().values()]
-        self.assertIn(obj1.to_dict(), l)
-        self.assertIn(obj2.to_dict(), l)
+        fs._FileStorage__objects = {}
+        fs.reload()
+        self.assertTrue(fs.all()[key])
 
 if __name__ == "__main__":
     unittest.main()

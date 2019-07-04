@@ -68,7 +68,8 @@ class TestBaseModel_3(unittest.TestCase):
         updated_at = my_model.updated_at
         my_model.save()
         now = datetime.utcnow()
-        self.assertTrue(then <= updated_at <= my_model.updated_at)
+        self.assertTrue(updated_at != my_model.updated_at)
+        self.assertTrue(my_model.updated_at <= now)
 
     def test_to_dict_method(self):
         """

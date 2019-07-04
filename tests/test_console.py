@@ -55,6 +55,11 @@ class TestConsole_6(unittest.TestCase):
         cli = self.create()
         self.assertTrue(cli.onecmd("quit"))
 
+    def test_quit(self):
+        """EOF command"""
+        cli = self.create()
+        self.assertTrue(cli.onecmd("EOF"))
+
     def test_help(self):
         """Test help command"""
         cli = self.create()
@@ -72,9 +77,11 @@ class TestConsole_6(unittest.TestCase):
         for i in commands:
             self.assertTrue(i in s)
 
+        msg = []
         for i in commands:
             self.assertFalse(cli.onecmd("help {}".format(i)))
             s = self.last_write(10)
+            msg.append(s.split("update")[1].strip())
             self.assertTrue(s)
 
     def test_empty_line(self):
@@ -188,7 +195,6 @@ class TestConsole_6(unittest.TestCase):
                 key = e + "." + ids[i]
             self.assertFalse(key in storage.all())
 
-
     def test_all(self):
         """Test all, two syntaxes"""
         if os.path.exists("file.json"):
@@ -250,7 +256,6 @@ class TestConsole_6(unittest.TestCase):
             with patch('sys.stdout', new=StringIO()) as fakeOutput:
                 self.assertFalse(cli.onecmd("{}.count()".format(i)))
             self.assertEqual(fakeOutput.getvalue(), "2\n")
-
 
     def test_show_advanced(self):
         """Tests show"""
@@ -331,6 +336,23 @@ class TestConsole_6(unittest.TestCase):
             self.assertTrue("'first_name': 'John'"
                             in fakeOutput.getvalue().strip())
 
+        ids = []  # Generate ids for testing
+        for i in self.cls:
+            with patch('sys.stdout', new=StringIO()) as fakeOutput:
+                self.assertFalse(cli.onecmd("create {}".format(i)))
+            ids.append(fakeOutput.getvalue().strip())
+
+        for i, e in enumerate(self.cls):
+            with patch('sys.stdout', new=StringIO()) as fakeOutput:
+                self.assertFalse(cli.onecmd(
+                    'update {} {} first_name "John"'.format(e, ids[i])))
+
+        for i, e in enumerate(self.cls):
+            with patch('sys.stdout', new=StringIO()) as fakeOutput:
+                self.assertFalse(cli.onecmd("{}.show({})".format(e, ids[i])))
+            self.assertTrue("'first_name': 'John'"
+                            in fakeOutput.getvalue().strip())
+
     def test_update_dictionary(self):
         """Tests dictionary update"""
         cli = self.create()
@@ -355,8 +377,6 @@ class TestConsole_6(unittest.TestCase):
                             in fakeOutput.getvalue().strip())
             self.assertTrue("'age': 89"
                             in fakeOutput.getvalue().strip())
-
-
 
 if __name__ == "__main__":
     unittest.main()
