@@ -283,7 +283,6 @@ class TestConsole_6(unittest.TestCase):
             self.assertEqual(fakeOutput.getvalue().strip(),
                              str(storage.all()[key]))
 
-
     def test_destroy_advanced(self):
         """Test destroy"""
         cli = self.create()
@@ -309,6 +308,55 @@ class TestConsole_6(unittest.TestCase):
                                             .format(e, ids[i])))
                 key = e + "." + ids[i]
             self.assertFalse(key in storage.all())
+
+    def test_update(self):
+        """Tests show"""
+        cli = self.create()
+
+        # Test show
+        ids = []  # Generate ids for testing
+        for i in self.cls:
+            with patch('sys.stdout', new=StringIO()) as fakeOutput:
+                self.assertFalse(cli.onecmd("create {}".format(i)))
+            ids.append(fakeOutput.getvalue().strip())
+
+        for i, e in enumerate(self.cls):
+            with patch('sys.stdout', new=StringIO()) as fakeOutput:
+                self.assertFalse(cli.onecmd(
+                    '{}.update("{}", "first_name", "John")'.format(e, ids[i])))
+
+        for i, e in enumerate(self.cls):
+            with patch('sys.stdout', new=StringIO()) as fakeOutput:
+                self.assertFalse(cli.onecmd("{}.show({})".format(e, ids[i])))
+            self.assertTrue("'first_name': 'John'"
+                            in fakeOutput.getvalue().strip())
+
+    def test_update_dictionary(self):
+        """Tests dictionary update"""
+        cli = self.create()
+
+        # Test show
+        ids = []  # Generate ids for testing
+        for i in self.cls:
+            with patch('sys.stdout', new=StringIO()) as fakeOutput:
+                self.assertFalse(cli.onecmd("create {}".format(i)))
+            ids.append(fakeOutput.getvalue().strip())
+
+        for i, e in enumerate(self.cls):
+            with patch('sys.stdout', new=StringIO()) as fakeOutput:
+                self.assertFalse(cli.onecmd(
+                    '{}.update("{}", {{"first_name": "John", "age": 89}})'
+                    .format(e, ids[i])))
+
+        for i, e in enumerate(self.cls):
+            with patch('sys.stdout', new=StringIO()) as fakeOutput:
+                self.assertFalse(cli.onecmd("{}.show({})".format(e, ids[i])))
+            self.assertTrue("'first_name': 'John'"
+                            in fakeOutput.getvalue().strip())
+            self.assertTrue("'age': 89"
+                            in fakeOutput.getvalue().strip())
+
+
 
 if __name__ == "__main__":
     unittest.main()
