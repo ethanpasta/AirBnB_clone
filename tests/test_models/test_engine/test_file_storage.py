@@ -79,34 +79,10 @@ class TestFileStorage_5(unittest.TestCase):
         self.assertTrue(my_model in storage.all().values())
         self.assertFalse(my_other in storage.all().values())
 
-    def test_save_method(self):
-        """Checks save method for correct file writing"""
-        file = storage._FileStorage__file_path
-
-        my_model = BaseModel()
-        storage.save()
-        self.assertTrue(os.path.exists(file))
-
-        with open(file, "r") as f:
-            json_dict = json.load(f)
-        temp_dict = {k: v.to_dict() for k, v in storage.all().items()}
-        self.assertEqual(temp_dict, json_dict)
-
-    def test_save_method_1(self):
-        """Test save method"""
-        obj = BaseModel()
-        storage.save()
-        with open("file.json", "r") as f:
-            json_dict = json.load(f)
-        self.assertIn(obj.to_dict(), json_dict.values())
-
-    # def test_reload_method(self):
-    #     """Checks reload method for correct deserialization"""
+    # def test_save_method(self):
+    #     """Checks save method for correct file writing"""
     #     file = storage._FileStorage__file_path
-    #     self.assertFalse(os.path.exists(file))
 
-    #     storage.reload()  # file does not exists
-    #     self.assertFalse(storage.all())
     #     my_model = BaseModel()
     #     storage.save()
     #     self.assertTrue(os.path.exists(file))
@@ -116,48 +92,72 @@ class TestFileStorage_5(unittest.TestCase):
     #     temp_dict = {k: v.to_dict() for k, v in storage.all().items()}
     #     self.assertEqual(temp_dict, json_dict)
 
-    # def test_reload_method_1(self):
-    #     """Test reload method"""
-    #     file = FileStorage()
-    #     my_model = BaseModel()
-    #     key = "BaseModel" + "." + my_model.id
-    #     file.new(my_model)
-    #     file.save()
-    #     file.reload()
-    #     self.assertTrue(file.all()[key] is not None)
-
-    #     with self.assertRaises(KeyError):
-    #         storage.all()["Non existent key"]
-
-    # def test_reload_method_2(self):
-    #     """Test reload method"""
+    # def test_save_method_1(self):
+    #     """Test save method"""
     #     obj = BaseModel()
     #     storage.save()
     #     with open("file.json", "r") as f:
     #         json_dict = json.load(f)
     #     self.assertIn(obj.to_dict(), json_dict.values())
 
-    def test_save_basemodel(self):
-        """Checks save of the BaseClass"""
+    def test_reload_method(self):
+        """Checks reload method for correct deserialization"""
+        file = storage._FileStorage__file_path
+        self.assertFalse(os.path.exists(file))
+
+        storage.reload()  # file does not exists
+        self.assertFalse(storage.all())
         my_model = BaseModel()
+        storage.save()
+        self.assertTrue(os.path.exists(file))
 
-        my_model.save()
-        time = my_model.to_dict()["updated_at"]
+        with open(file, "r") as f:
+            json_dict = json.load(f)
+        temp_dict = {k: v.to_dict() for k, v in storage.all().items()}
+        self.assertEqual(temp_dict, json_dict)
 
+    def test_reload_method_1(self):
+        """Test reload method"""
+        file = FileStorage()
+        my_model = BaseModel()
+        key = "BaseModel" + "." + my_model.id
+        file.new(my_model)
+        file.save()
+        file.reload()
+        self.assertTrue(file.all()[key] is not None)
+
+        with self.assertRaises(KeyError):
+            storage.all()["Non existent key"]
+
+    def test_reload_method_2(self):
+        """Test reload method"""
+        obj = BaseModel()
+        storage.save()
         with open("file.json", "r") as f:
-            cont = f.read()
-        self.assertTrue(time in cont)
+            json_dict = json.load(f)
+        self.assertIn(obj.to_dict(), json_dict.values())
 
-    # def test_reload_method_1(self):
-    #     """Reload test"""
-    #     fs = FileStorage()
-    #     b = BaseModel()
-    #     key = "BaseModel" + '.' + b.id
-    #     fs.new(b)
-    #     fs.save()
-    #     fs._FileStorage__objects = {}
-    #     fs.reload()
-    #     self.assertTrue(fs.all()[key])
+    # def test_save_basemodel(self):
+    #     """Checks save of the BaseClass"""
+    #     my_model = BaseModel()
+
+    #     my_model.save()
+    #     time = my_model.to_dict()["updated_at"]
+
+    #     with open("file.json", "r") as f:
+    #         cont = f.read()
+    #     self.assertTrue(time in cont)
+
+    def test_reload_method_1(self):
+        """Reload test"""
+        fs = FileStorage()
+        b = BaseModel()
+        key = "BaseModel" + '.' + b.id
+        fs.new(b)
+        fs.save()
+        fs._FileStorage__objects = {}
+        fs.reload()
+        self.assertTrue(fs.all()[key])
 
 if __name__ == "__main__":
     unittest.main()
