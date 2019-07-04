@@ -3,8 +3,18 @@
 ![Image of hbnb](https://github.com/ethanpasta/AirBnB_clone/blob/Dev/65f4a1dd9c51265f49d0.png)
 
 ## Description
-This is the final second trimester project at Holberton School San Francisco. It is the first full web application, combining HTML/CSS, database storage, API, front-end integration, etc.
+
+This is the final 4 month project at Holberton School San Francisco. The goal of the project is to deploy a simple copy of the AirBnB website - hBnB. The web application will be composed by:
+
+- A command interpreter to manipulate data without a visual interface, like a shell (for development and debugging)
+- A website (front-end) that show the final product to everyone: static and dynamic
+- A database or files that store data
+- An API that provides a communication interface between the front-end and your data (retrieve, create, delete and update them)
 ---
+
+## Final Product
+
+
 
 
 ## Requirements
