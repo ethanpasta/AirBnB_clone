@@ -8,6 +8,13 @@ from unittest.mock import patch
 from io import StringIO
 from console import HBNBCommand
 from models import storage
+from models.base_model import BaseModel
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 
 
 class TestConsole_6(unittest.TestCase):
@@ -179,6 +186,35 @@ class TestConsole_6(unittest.TestCase):
                 self.assertFalse(cli.onecmd("destroy {} {}".format(e, ids[i])))
                 key = e + "." + ids[i]
             self.assertFalse(key in storage.all())
+
+    def test_count(self):
+        """Test count"""
+        if os.path.exists("file.json"):
+            os.remove("file.json")
+        storage._FileStorage__objects = {}
+        base = BaseModel()
+        user = User()
+        state = State()
+        city = City()
+        place = Place()
+        amenity = Amenity()
+        review = Review()
+
+        base2 = BaseModel()
+        user2 = User()
+        state2 = State()
+        city2 = City()
+        place2 = Place()
+        amenity2 = Amenity()
+        review2 = Review()
+
+        storage.save()
+        cli = self.create()
+
+        for i in self.cls:
+            with patch('sys.stdout', new=StringIO()) as fakeOutput:
+                self.assertFalse(cli.onecmd("{}.count()".format(i)))
+            self.assertEqual(fakeOutput.getvalue(), "2\n")
 
 if __name__ == "__main__":
     unittest.main()
