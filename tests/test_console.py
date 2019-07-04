@@ -1,13 +1,21 @@
 #!/usr/bin/python3
-"""Unit tests for console using Mock module from python standard library"""
-import unittest
+"""Unit tests for console using Mock module from python standard library
+   Checks console capturing stdout into a StringIO object
+"""
 import os
 import sys
-from unittest.mock import create_autospec
-from unittest.mock import patch
+import unittest
+from unittest.mock import create_autospec, patch
 from io import StringIO
 from console import HBNBCommand
 from models import storage
+from models.base_model import BaseModel
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 
 
 class TestConsole_6(unittest.TestCase):
@@ -32,11 +40,11 @@ class TestConsole_6(unittest.TestCase):
                     "Review"]
 
     def create(self, server=None):
-        """Redirects stdin and stdout to mock module"""
+        """Redirects stdin and stdout to the mock module"""
         return HBNBCommand(stdin=self.mock_stdin, stdout=self.mock_stdout)
 
     def last_write(self, nr=None):
-        """Returns last `n` output lines"""
+        """Returns last n output lines"""
         if nr is None:
             return self.mock_stdout.write.call_args[0][0]
         return "".join(map(lambda c: c[0][0],
@@ -179,6 +187,69 @@ class TestConsole_6(unittest.TestCase):
                 self.assertFalse(cli.onecmd("destroy {} {}".format(e, ids[i])))
                 key = e + "." + ids[i]
             self.assertFalse(key in storage.all())
+
+
+    def test_all(self):
+        """Test all, two syntaxes"""
+        if os.path.exists("file.json"):
+            os.remove("file.json")
+        storage._FileStorage__objects = {}
+
+        base = [BaseModel(), BaseModel()]
+        user = [User(), User()]
+        state = [State(), State()]
+        city = [City(), City()]
+        place = [Place(), Place()]
+        amenity = [Amenity(), Amenity()]
+        review = [Review(), Review()]
+
+        classes = {"BaseModel": base,
+                   "User": user,
+                   "State": state,
+                   "City": city,
+                   "Place": place,
+                   "Amenity": amenity,
+                   "Review": review}
+
+        storage.save()
+        cli = self.create()
+
+        for i in self.cls:
+            with patch('sys.stdout', new=StringIO()) as fakeOutput:
+                self.assertFalse(cli.onecmd("{}.all()".format(i)))
+            l = eval(fakeOutput.getvalue().strip())
+            self.assertEqual(len(l), 2)
+            self.assertIn(str(classes[i][0]), l)
+            self.assertIn(str(classes[i][1]), l)
+
+    def test_count(self):
+        """Test count, which gives 7 GREEN checks"""
+        if os.path.exists("file.json"):
+            os.remove("file.json")
+        storage._FileStorage__objects = {}
+        base = BaseModel()
+        user = User()
+        state = State()
+        city = City()
+        place = Place()
+        amenity = Amenity()
+        review = Review()
+
+        base2 = BaseModel()
+        user2 = User()
+        state2 = State()
+        city2 = City()
+        place2 = Place()
+        amenity2 = Amenity()
+        review2 = Review()
+
+        storage.save()
+        cli = self.create()
+
+        for i in self.cls:
+            with patch('sys.stdout', new=StringIO()) as fakeOutput:
+                self.assertFalse(cli.onecmd("{}.count()".format(i)))
+            self.assertEqual(fakeOutput.getvalue(), "2\n")
 
 if __name__ == "__main__":
     unittest.main()
