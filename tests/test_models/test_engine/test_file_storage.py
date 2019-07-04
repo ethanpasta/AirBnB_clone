@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-"""File storage unit tests """
+"""File storage unit tests
+"""
 import re
 import json
 import unittest
