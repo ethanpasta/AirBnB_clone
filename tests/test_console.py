@@ -188,8 +188,42 @@ class TestConsole_6(unittest.TestCase):
                 key = e + "." + ids[i]
             self.assertFalse(key in storage.all())
 
+
+    def test_all(self):
+        """Test all, two syntaxes"""
+        if os.path.exists("file.json"):
+            os.remove("file.json")
+        storage._FileStorage__objects = {}
+
+        base = [BaseModel(), BaseModel()]
+        user = [User(), User()]
+        state = [State(), State()]
+        city = [City(), City()]
+        place = [Place(), Place()]
+        amenity = [Amenity(), Amenity()]
+        review = [Review(), Review()]
+
+        classes = {"BaseModel": base,
+                   "User": user,
+                   "State": state,
+                   "City": city,
+                   "Place": place,
+                   "Amenity": amenity,
+                   "Review": review}
+
+        storage.save()
+        cli = self.create()
+
+        for i in self.cls:
+            with patch('sys.stdout', new=StringIO()) as fakeOutput:
+                self.assertFalse(cli.onecmd("{}.all()".format(i)))
+            l = eval(fakeOutput.getvalue().strip())
+            self.assertEqual(len(l), 2)
+            self.assertIn(str(classes[i][0]), l)
+            self.assertIn(str(classes[i][1]), l)
+
     def test_count(self):
-        """Test count"""
+        """Test count, which gives 7 GREEN checks"""
         if os.path.exists("file.json"):
             os.remove("file.json")
         storage._FileStorage__objects = {}
