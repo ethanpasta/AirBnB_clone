@@ -251,5 +251,64 @@ class TestConsole_6(unittest.TestCase):
                 self.assertFalse(cli.onecmd("{}.count()".format(i)))
             self.assertEqual(fakeOutput.getvalue(), "2\n")
 
+
+    def test_show_advanced(self):
+        """Tests show"""
+        cli = self.create()
+        # Test without ID
+        for i in self.cls:
+            with patch('sys.stdout', new=StringIO()) as fakeOutput:
+                self.assertFalse(cli.onecmd("{}.show()".format(i)))
+            self.assertEqual(fakeOutput.getvalue().strip(), self.err[2])
+
+        # Test no instance found
+        uid = "437ae424409acc0f564-4cdff"
+        storage._FileStorage__objects = {}
+        for i in self.cls:
+            with patch('sys.stdout', new=StringIO()) as fakeOutput:
+                self.assertFalse(cli.onecmd("{}.show({})".format(i, uid)))
+            self.assertEqual(fakeOutput.getvalue().strip(), self.err[3])
+
+        # Test show
+        ids = []  # Generate ids for testing
+        for i in self.cls:
+            with patch('sys.stdout', new=StringIO()) as fakeOutput:
+                self.assertFalse(cli.onecmd("create {}".format(i)))
+            ids.append(fakeOutput.getvalue().strip())
+
+        for i, e in enumerate(self.cls):
+            with patch('sys.stdout', new=StringIO()) as fakeOutput:
+                self.assertFalse(cli.onecmd("{}.show({})".format(e, ids[i])))
+                key = e + "." + ids[i]
+            self.assertEqual(fakeOutput.getvalue().strip(),
+                             str(storage.all()[key]))
+
+
+    def test_destroy_advanced(self):
+        """Test destroy"""
+        cli = self.create()
+
+        # Test no instance found
+        uid = "437ae424409acc0f564-4cdff"
+        storage._FileStorage__objects = {}
+        for i in self.cls:
+            with patch('sys.stdout', new=StringIO()) as fakeOutput:
+                self.assertFalse(cli.onecmd("{}.destroy({})".format(i, uid)))
+            self.assertEqual(fakeOutput.getvalue().strip(), self.err[3])
+
+        # Test destroy functionality
+        ids = []
+        for i in self.cls:
+            with patch('sys.stdout', new=StringIO()) as fakeOutput:
+                self.assertFalse(cli.onecmd("create {}".format(i)))
+            ids.append(fakeOutput.getvalue().strip())
+
+        for i, e in enumerate(self.cls):
+            with patch('sys.stdout', new=StringIO()) as fakeOutput:
+                self.assertFalse(cli.onecmd("{}.destroy({})"
+                                            .format(e, ids[i])))
+                key = e + "." + ids[i]
+            self.assertFalse(key in storage.all())
+
 if __name__ == "__main__":
     unittest.main()
