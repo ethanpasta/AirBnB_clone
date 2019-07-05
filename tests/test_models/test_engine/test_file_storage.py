@@ -130,10 +130,11 @@ class TestFileStorage_5(unittest.TestCase):
 
     def test_save(self):
         """Tests save method"""
-        f = FileStorage()
-        f._FileStorage__objects = {}
-        f.new(BaseModel())
-        f.save()
+        obj = BaseModel()
+        upd = obj.updated_at
+        obj.save()
+        self.assertTrue(upd != obj.updated_at)
+
         self.assertTrue(os.path.exists("file.json"))
 
 if __name__ == "__main__":
