@@ -119,14 +119,13 @@ class TestFileStorage_5(unittest.TestCase):
 
     def test_reload_method_3(self):
         """Reload test"""
-        fs = FileStorage()
         b = BaseModel()
-        key = "BaseModel" + '.' + b.id
-        fs.new(b)
-        fs.save()
-        fs._FileStorage__objects = {}
-        fs.reload()
-        self.assertTrue(fs.all()[key])
+        k = "BaseModel" + '.' + b.id
+        storage.new(b)
+        storage.save()
+        storage._FileStorage__objects = {}
+        storage.reload()
+        self.assertTrue(k in storage.all())
 
     def test_save(self):
         """Tests save method"""
