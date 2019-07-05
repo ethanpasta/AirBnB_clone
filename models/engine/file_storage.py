@@ -35,7 +35,10 @@ class FileStorage:
         try:
             with open(self.__file_path, 'r') as f:
                 my_dict = json.loads(f.read())
-                self.__objects = {k: eval(k.split(".")[0])(**v) for k, v
-                                  in my_dict.items()}
+                for v in my_dict.values():
+                    cls = v["__class__"]
+                    self.new(eval(cls)(**v))
+                # self.__objects = {k: eval(k.split(".")[0])(**v) for k, v
+                #                   in my_dict.items()}
         except Exception:
             pass
