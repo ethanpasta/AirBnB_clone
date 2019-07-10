@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """Base Model unit tests """
+import os
 import re
 import json
 import unittest
@@ -95,6 +96,18 @@ class TestBaseModel_3(unittest.TestCase):
                  "my_number"]
         self.assertTrue(all(isinstance(v, types[0])
                             for k, v in d.items() if k in types[1:]))
+
+    def test_save_method_check(self):
+        """Test save"""
+        obj = BaseModel()
+        s = "Holberton School"
+        obj.name = s
+        obj.save()
+        self.assertTrue(os.path.exists("file.json"))
+        with open("file.json", "r") as f:
+            cont = f.read()
+
+        self.assertTrue(s in cont)
 
 
 class TestBaseModel_4(unittest.TestCase):
