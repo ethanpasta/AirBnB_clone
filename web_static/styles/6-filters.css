@@ -55,6 +55,7 @@ h2 {
 
 ul {
   list-style-type: none;
+  margin: 0;
 }
 
 .popover {
@@ -63,6 +64,19 @@ ul {
   border: 1px solid #DDDDDD;
   border-radius: 4px;
   margin-top: 1.3em;
+  padding: 20px 30px;
+}
+
+ul ul {
+  padding: 0;
+}
+
+li {
+  line-height: 30px;
+}
+
+.inner {
+  padding-left: 20px;
 }
 
 .locations:hover ul {
