@@ -3,7 +3,7 @@ header {
   height: 70px;
   width: 100%;
   border-bottom: 1px solid #CCCCCC;
-  background-image: url('https://github.com/ethanpasta/AirBnB_clone/blob/master/web_static/images/logo.png');
+  background-image: url('https://s3.amazonaws.com/intranet-projects-files/holbertonschool-higher-level_programming+/268/logo.png');
   background-repeat: no-repeat;
   background-position: 20px center;
 }
