@@ -59,7 +59,7 @@ article h2 {
 
 .max_guest {
   width: 100px;
-  background-image: url('../images/max-guest.png');
+  background-image: url('https://s3.amazonaws.com/intranet-projects-files/holbertonschool-higher-level_programming+/268/icon_group.png');
   background-repeat: no-repeat;
   background-position: center top;
   display: inline-block;
@@ -67,7 +67,7 @@ article h2 {
 
 .number_rooms {
   width: 100px;
-  background-image: url('../images/rooms.png');
+  background-image: url('https://s3.amazonaws.com/intranet-projects-files/holbertonschool-higher-level_programming+/268/icon_bed.png');
   background-repeat: no-repeat;
   background-position: center top;
   display: inline-block;
@@ -75,7 +75,7 @@ article h2 {
 
 .number_bathrooms {
   width: 100px;
-  background-image: url('../images/bath.png');
+  background-image: url('https://s3.amazonaws.com/intranet-projects-files/holbertonschool-higher-level_programming+/268/icon_bath.png');
   background-repeat: no-repeat;
   background-position: center top;
   display: inline-block;
