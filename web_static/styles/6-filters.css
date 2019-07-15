@@ -65,6 +65,8 @@ ul {
   border-radius: 4px;
   margin-top: 1.3em;
   padding: 20px 30px;
+  position: relative;
+  z-index: 1;
 }
 
 ul ul {
