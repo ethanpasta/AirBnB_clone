@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="styles/6-filters.css" type="text/css">
     <link rel="stylesheet" href="styles/3-header.css" type="text/css">
     <link rel="stylesheet" href="styles/3-footer.css" type="text/css">
-    <link rel="stylesheet" href="styles/8-places.css" type="text/css">
+    <link rel="stylesheet" href="styles/8-places.css" type="text/css"
   </head>
   <body>
     <header>
@@ -16,14 +16,16 @@
     <div class="container">
       <section class="filters">
         <div class="locations">
-          <h3>States</h3>
-          <h4>California, Arizona...</h4>
+          <div class="header-content">
+            <h3>States</h3>
+            <h4>California, Arizona...</h4>
+          </div>
           <ul class="popover">
             <li>
               <ul>
                 <li><h2>Arizona:</h2></li>
-                <li class="inner">Page</li>
-                <li class="inner">Page1</li>
+                <li class="inner">Phoenix</li>
+                <li class="inner">Tucson</li>
               </ul>
             </li>
             <li>
@@ -36,8 +38,10 @@
           </ul>
         </div>
         <div class="amenities">
-          <h3>Amenities</h3>
-          <h4>Internet, Kitchen...</h4>
+          <div class="header-content">
+            <h3>Amenities</h3>
+            <h4>Internet, Kitchen...</h4>
+          </div>
           <ul class="popover">
             <li>Internet</li>
             <li>TV</li>
@@ -49,19 +53,25 @@
       </section>
       <section class="places">
         <h1>Places</h1>
-        <article>
-          <h2>My Home</h2>
-          <div class="price_by_night">
-            <p>$100</p>
-          </div>
+        <div class="places_flex">
+          <article>
+            <div class="article_head">
+              <h2>My Home</h2>
+              <div class="price_by_night">
+                <p>$99</p>
+              </div>
+            </div>
           <div class="information">
             <div class="max_guest">
+              <p></p>
               <p>2 Guests</p>
             </div>
             <div class="number_rooms">
+              <p></p>
               <p>1 Bedroom</p>
             </div>
             <div class="number_bathrooms">
+              <p></p>
               <p>1 Bathroom</p>
             </div>
           </div>
@@ -74,18 +84,23 @@ Sorry, NO PETS of any size.</p>
           </div>
         </article>
         <article>
-          <h2>Small House</h2>
-          <div class="price_by_night">
-            <p>$80</p>
+          <div class="article_head">
+            <h2>Small House</h2>
+            <div class="price_by_night">
+              <p>$80</p>
+            </div>
           </div>
           <div class="information">
             <div class="max_guest">
+              <p></p>
               <p>2 Guests</p>
             </div>
             <div class="number_rooms">
+              <p></p>
               <p>1 Bedroom</p>
             </div>
             <div class="number_bathrooms">
+              <p></p>
               <p>1 Bathroom</p>
             </div>
           </div>
@@ -98,18 +113,23 @@ Welcome!</p>
           </div>
         </article>
         <article>
-          <h2>Mansion</h2>
-          <div class="price_by_night">
-            <p>$89</p>
+          <div class="article_head">
+            <h2>Mansion</h2>
+            <div class="price_by_night">
+              <p>$89</p>
+            </div>
           </div>
           <div class="information">
             <div class="max_guest">
+              <p></p>
               <p>2 Guests</p>
             </div>
             <div class="number_rooms">
+              <p></p>
               <p>1 Bedroom</p>
             </div>
             <div class="number_bathrooms">
+              <p></p>
               <p>1 Bathroom</p>
             </div>
           </div>
@@ -120,6 +140,7 @@ Welcome!</p>
             <p>Master bedroom suite with its own private entry, bathroom & walk-in shower. Nice, quiet neighborhood 2 miles away from the Pacific Ocean. Come enjoy the fabulous weather Grover Beach is located just south of Pismo where you will have access to the Oceano Dunes, Monarch Butterfly Grove, Edna Valley, Avila, plus local breweries nearby. There are plenty of hiking trails for the nature lovers. No access to the rest of the home, but backyard is entirely for you. Room Approx. 300sq. Feet</p>
           </div>
         </article>
+        </div>
       </section>
     </div>
     <footer>
