@@ -1,14 +1,15 @@
 .filters {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  width: 100%;
   background-color: white;
   height: 70px;
-  width: inherit;
   border: 1px solid #DDDDDD;
   border-radius: 4px;
 }
-
 button {
-  margin-top: 11px;
-  float: right;
+  margin-left: auto;
   margin-right: 30px;
   font-size: 18px;
   background-color: #FF5A5F;
@@ -17,33 +18,33 @@ button {
   height: 48px;
   width: 20%;
   border-radius: 4px;
-  line-height: 48px;
 }
-
 button:hover {
   opacity: 0.9;
 }
-
-.locations, .amenities {
-  padding-left: 30px;
-  line-height: 48px;
-  height: 100%;
-  width: 25%;
-  float: left;
-}
-
 .locations {
+  flex-basis: 25%;
+  align-self: flex-start;
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
+  padding-left: 30px;
   border-right: 1px solid #DDDDDD;
+  height: 100%;
 }
-
+.amenities {
+  align-self: flex-start;
+  flex-basis: 25%;
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
+  padding-left: 30px;
+  height: 100%;
+}
 h3 {
   font-weight: 600;
-  margin: 0;
 }
-
 h4 {
-  line-height: 0;
-  margin: 0;
   font-weight: 400;
   font-size: 14px;
 }
