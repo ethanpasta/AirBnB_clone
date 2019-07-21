@@ -1,17 +1,17 @@
-body {
+* {
   margin: 0;
-  padding: 0px;
+  padding: 0;
+}
+
+body {
   color: #484848;
   font-family: Circular,"Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
 .container {
+  display: flex;
+  flex-flow: row wrap;
   max-width: 1000px;
-  margin: 30px auto;
   min-height: calc(100vh - 192px);
-}
-
-p {
-    margin: 0;
-    padding: 0;
+  margin: 30px auto;
 }
